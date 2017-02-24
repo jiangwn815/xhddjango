@@ -5,6 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-
+    {% if latest_user_list %}
+    <ul>
+    {% for user in latest_user_list %}
+        <li><a href="/mainpages/{{ user.id }}/">{{ user.mobile }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No users are available.</p>
+{% endif %}
 </body>
 </html>

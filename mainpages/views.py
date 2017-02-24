@@ -2,13 +2,19 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
+from django.template import loader
 
 from .models import User
 
+
 def index(request):
     latest_user_list = User.objects.order_by("-createdAt")[:3]
-    output = ','.join([q.mobile for q in latest_user_list])
-    return HttpResponse(output)
+    print(latest_user_list[0].mobile)
+    template = loader.get_template('mainpages/index.html')
+    context = {
+        latest_user_list: latest_user_list,
+    }
+    return HttpResponse(template.render(context, request))
 
 
 def show_user(request, user_id):
