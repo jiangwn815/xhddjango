@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
-from django.http import HttpResponse
-from django.template import loader
+from django.http import HttpResponse, Http404
+#from django.template import loader
 
 from .models import User
 
@@ -10,15 +10,23 @@ from .models import User
 def index(request):
     latest_user_list = User.objects.order_by("-createdAt")[:3]
     print(latest_user_list[0].mobile)
-    template = loader.get_template('mainpages/index.html')
+    #template = loader.get_template('mainpages/index.html')
     context = {
-        latest_user_list: latest_user_list,
+        "latest_user_list": latest_user_list,
     }
-    return HttpResponse(template.render(context, request))
+    #return HttpResponse(template.render(context, request))
+    return render(request, 'mainpages/index.html', context)  #  return a HttpResponse object
 
 
-def show_user(request, user_id):
-    return HttpResponse("You're looking at user %s." % user_id)
+def showuser(request, mobile):
+    """
+    try:
+        user = User.objects.get(mobile=mobile)
+    except User.DoesNotExist:
+        raise Http404("User does not exist")
+    """
+    user = get_object_or_404(User, mobile=mobile)
+    return render(request, 'mainpages/show_user.html', {"user": user})
 
 
 def info(request, user_id):
