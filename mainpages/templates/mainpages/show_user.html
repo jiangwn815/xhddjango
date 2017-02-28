@@ -6,10 +6,13 @@
 </head>
 <body>
     <h1>{{ user.mobile }}</h1>
-<ul>
-{% for order in user.order_set.all %}
-    <li>{{ order.out_trade_no }}</li>
-{% endfor %}
-</ul>
+    {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    <ul>
+    {% for order in user.order_set.all %}
+        <li>{{ order.out_trade_no }}</li>
+    {% endfor %}
+    </ul>
 </body>
 </html>
