@@ -26,6 +26,9 @@ class User(models.Model):
     mobile = models.CharField(max_length=128)
     passwd = models.CharField(max_length=128)
 
+    def __str__(self):
+        return self.mobile
+
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -38,3 +41,6 @@ class Order(models.Model):
     payment_type = models.CharField(max_length=6, null=True, blank=True)
     out_trade_no = models.CharField(max_length=32)  # 订单号
     time_end = models.CharField(max_length=32, null=True, blank=True)  # 支付完成时间
+
+    def __str__(self):
+        return self.out_trade_no

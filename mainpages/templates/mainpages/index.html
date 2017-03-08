@@ -6,14 +6,13 @@
 </head>
 <body>
     {% if latest_user_list %}
-    <ul>
-    {% for user in latest_user_list %}
-
-        <li><a href="{% url 'mainpages:showuser' mobile=user.mobile %}">{{ user.mobile }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No users are available.</p>
-{% endif %}
+        <ul>
+        {% for user in latest_user_list %}
+            <li><a href="{% url 'mainpages:showuser' mobile=user.mobile %}">{{ user.mobile }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users are available.</p>
+    {% endif %}
 </body>
 </html>
