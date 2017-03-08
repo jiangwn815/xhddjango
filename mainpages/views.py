@@ -34,5 +34,5 @@ def info(request, user_id):
     return HttpResponse(response % user_id)
 
 
-def user_amount(request, user_id):
-    return HttpResponse("You're viewing the orders on user %s." % user_id)
+def useramount(request, mobile):
+    return HttpResponse("You're viewing the orders on user %s." % mobile)
