@@ -18,8 +18,8 @@
 <form action="{% url 'mainpages:useramount' mobile=user.mobile %}" method="post">
 {% csrf_token %}
 {% for order in user.order_set.all %}
-    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ order.out_trade_no }}" />
-    <label for="choice{{ forloop.counter }}">{{ order.total_fee }}</label><br />
+    <input type="radio" name="order" id="order{{ forloop.counter }}" value="{{ order.out_trade_no }}" />
+    <label for="order{{ forloop.counter }}">{{ order.total_fee }}</label><br />
 {% endfor %}
 <input type="submit" value="Submit" />
 </form>
