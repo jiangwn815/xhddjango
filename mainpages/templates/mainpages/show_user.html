@@ -21,6 +21,8 @@
     <input type="radio" name="order" id="order{{ forloop.counter }}" value="{{ order.out_trade_no }}" />
     <label for="order{{ forloop.counter }}">{{ order.total_fee }}</label><br />
 {% endfor %}
+    <label for="amount">金额</label>
+    <input type="text" name="amount" id="amount">
 <input type="submit" value="Submit" />
 </form>
 
