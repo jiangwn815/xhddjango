@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>{{ user.mobile }}</h1>
+
+    <ul>
+    {% for order in user.order_set.all %}
+        <li>{{ order.out_trade_no }} -- {{ order.total_fee }} vote{{ order.total_fee|pluralize }}</li>
+    {% endfor %}
+    </ul>
+
+<a href="{% url 'mainpages:showuser' mobile=user.mobile %}">Show user?</a>
+</body>
+</html>

@@ -1,21 +1,22 @@
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
-from django.http import HttpResponse, Http404
-#from django.template import loader
+from django.http import HttpResponseRedirect, HttpResponse
+# from django.template import loader
 
 from .models import User, Order
+from django.urls import reverse
 
 
 def index(request):
     latest_user_list = User.objects.order_by("-createdAt")[:3]
     print(latest_user_list[0].mobile)
-    #template = loader.get_template('mainpages/index.html')
+    # template = loader.get_template('mainpages/index.html')
     context = {
         "latest_user_list": latest_user_list,
     }
-    #return HttpResponse(template.render(context, request))
-    return render(request, 'mainpages/index.html', context)  #  return a HttpResponse object
+    # return HttpResponse(template.render(context, request))
+    return render(request, 'mainpages/index.html', context)  # return a HttpResponse object
 
 
 def showuser(request, mobile):
@@ -29,9 +30,9 @@ def showuser(request, mobile):
     return render(request, 'mainpages/show_user.html', {"user": user})
 
 
-def info(request, user_id):
-    response = "You're looking at the info of user %s."
-    return HttpResponse(response % user_id)
+def info(request, mobile):
+    user = get_object_or_404(User, mobile=mobile)
+    return render(request, 'mainpages/info.html', {'user': user})
 
 
 def useramount(request, mobile):
@@ -39,5 +40,11 @@ def useramount(request, mobile):
     try:
         selected_order = user.order_set.get(out_trade_no=request.POST['order'])
     except(KeyError, Order.DoesNotExist):
-
-    return HttpResponse("You're viewing the orders on user %s." % mobile)
+        return render(request, 'mainpages/show_user.html', {
+            'user': user,
+            'error_message': "Order does not exist"
+        })
+    else:
+        selected_order.total_fee = request.POST['amount']
+        selected_order.save()
+    return HttpResponseRedirect(reverse('mainpages:info', args=(user.mobile,)))
