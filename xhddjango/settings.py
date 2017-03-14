@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'mainpages.apps.MainpagesConfig',
+    'xhddjango.apps.XhddjangoConfig',
+    'ydys.apps.YdysConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
