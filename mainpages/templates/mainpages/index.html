@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/bootstrap.css' %}" />
     <title>Title</title>
 </head>
 <body>
     {% if latest_user_list %}
+        <h3>用户列表</h3>
         <ul>
         {% for user in latest_user_list %}
             <li><a href="{% url 'mainpages:showuser' mobile=user.mobile %}">{{ user.mobile }}</a></li>

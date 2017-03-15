@@ -1,0 +1,131 @@
+
+#frist-jumbotron{
+    background: url(/static/xhd/bg2.png) center no-repeat;
+    background-size: cover;
+    margin-bottom: 1rem; 
+}
+#frist-jumbotron .container{
+    display: flex;
+    justify-content: flex-end;
+}
+#junmbotro-content{   
+     padding-top: 2rem;
+     margin-right: 0;
+     max-width: 15rem;
+ }
+ #registry{ margin-left: 30%; }
+ .quote-header{ color:#677077; }
+ blockquote.bquote{
+   font-size: 1rem;
+   color:#788089;
+}
+
+i{ margin-right: 1rem; }
+a.carousel-control{ opacity: 0; }
+
+#factor1{
+    background: url("/static/xhd/icon.png");
+    background-position: 0 -28px;
+    width: 64px;
+    height: 64px;
+    transform: scale(0.75,0.75);
+}
+#factor2{
+    background: url("/static/xhd/icon.png");
+    background-position: 0 -101px;
+    width: 64px;
+    height: 64px;
+    transform: scale(0.75,0.75);
+}
+#factor3{
+    background: url("/static/xhd/icon.png");
+    background-position: 0 -174px;
+    width: 64px;
+    height: 64px;
+    transform: scale(0.75,0.75);
+}
+#factor4{
+    background: url("/static/xhd/icon.png");
+    background-position: 0 -247px;
+    width: 64px;
+    height: 64px;
+    transform: scale(0.75,0.75);
+}
+div.media>div.media{ 
+    margin-left: auto;
+    margin-right: auto;
+    width: 48%; }
+#advantage{ padding-bottom: 3rem; }
+#itinerary>h4,
+#itinerary-business>h4,
+#features>h4,
+#qa>h4{
+    margin: 1rem auto;
+    text-align: center;
+    vertical-align: middle;
+    color: #677077;
+}
+#itinerary         { background: url("/static/xhd/bg2.jpg") no-repeat center; }
+#itinerary-business{ background: url("/static/xhd/bg3.jpg") no-repeat center; }
+#itinerary,
+#itinerary-business,
+#features,
+#qa{
+    border-top: 1px #b8c1c8 solid;
+    padding: 2rem 1rem 0.5rem 1rem; 
+    background-size: cover;
+}
+#itinerary>div,
+#itinerary-business>div{
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto; 
+}
+.card-header>h5{
+    text-align: center;
+    color: #677077;
+    font-size: 80%;
+}
+.media.four-factors span{ color: #788089; }
+h5>a:link,h5>a:visited,h5>a:hover{
+    color: #fff;
+    text-decoration: none;
+}
+div.card-header{
+    background-color: #49b0e5;
+    opacity: 0.8;
+}
+.card-block>ul>li{
+    display: flex;
+    justify-content: space-around;
+}
+.card-block>ul>li>span:first-child{
+    flex-basis: 5rem;
+    color: #49b0e5;
+}
+.card-block>ul>li>span:last-child{
+    flex-basis: 20rem;
+    color: #677077;
+}
+footer{
+    margin-top: 2rem;
+    text-align: center;
+}
+#features .card{
+    margin: auto;
+    margin-bottom: 3rem;
+    width: 325px;
+    border: 0px;
+}
+#features .card-block{
+    padding: 0;
+    padding-top: 1rem;
+}
+#grid{
+    background: url("/static/xhd/bg4.png") no-repeat center;
+    background-size: cover;
+    height: 15rem;
+}
+#qa .list-group li span:first-child{
+    color: #49b0e5;
+}
