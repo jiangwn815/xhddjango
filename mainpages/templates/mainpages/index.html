@@ -14,9 +14,10 @@
 </head>
 <body>
 <header>
-    <div class="navbar navbar-toggleable-sm navbar-inverse  justify-content-between">
-        <a class="navbar-brand" href="#"><img src="{% static 'mainpages/img/headerlogo.png' %}" width="160rem"></a>
-
+    <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'mainpages/img/headerlogo.png' %}" width="140rem">
+        </a>
         <ul class="nav">
           <li class="nav-item">
             <a class="nav-link" href="#">登录</a>
@@ -28,15 +29,37 @@
     </div>
 
 </header>
-    {% if latest_user_list %}
-        <h3>用户列表</h3>
-        <ul>
-        {% for user in latest_user_list %}
-            <li><a href="{% url 'mainpages:showuser' mobile=user.mobile %}">{{ user.mobile }}</a></li>
-        {% endfor %}
+<div class="container-fluid">
+<div class="row">
+    <nav class="col-2 ">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Active</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Longer nav link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
         </ul>
-    {% else %}
-        <p>No users are available.</p>
-    {% endif %}
+    </nav>
+    <main class="col-10">
+        {% if latest_user_list %}
+            <h3>用户列表</h3>
+            <ul>
+            {% for user in latest_user_list %}
+                <li><a href="{% url 'mainpages:showuser' mobile=user.mobile %}">{{ user.mobile }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users are available.</p>
+        {% endif %}
+    </main>
+</div>
+</div>
 </body>
 </html>
