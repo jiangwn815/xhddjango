@@ -7,9 +7,27 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/style.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/bootstrap.css' %}" />
+    <script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'mainpages/js/tether.min.js' %}"></script>
+    <script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
     <title>Title</title>
 </head>
 <body>
+<header>
+    <div class="navbar navbar-toggleable-sm navbar-inverse  justify-content-between">
+        <a class="navbar-brand" href="#"><img src="{% static 'mainpages/img/headerlogo.png' %}" width="160rem"></a>
+
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">登录</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">注册</a>
+          </li>
+        </ul>
+    </div>
+
+</header>
     {% if latest_user_list %}
         <h3>用户列表</h3>
         <ul>
