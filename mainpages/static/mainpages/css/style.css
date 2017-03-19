@@ -6,7 +6,7 @@ header{
     background-color: rgb(68,68,68);
     padding-left: 2rem;
     padding-right: 2rem;
-    border-bottom: #8c8c8c 0.1rem solid;
+    border-bottom: #8c8c8c 0.2rem solid;
 }
 header li a.nav-link{
     color: #fff;
@@ -18,7 +18,55 @@ header li{
     border: #8c8c8c 0.1rem solid;
     border-radius: 5%;
 }
+nav{
+    border-right: #8c8c8c 0.1rem solid;
+
+}
+#nav{
+    padding-right: 0;
+    border-right-width: 0;
+    background-color: #f0f0f0;
+}
+nav li{
+
+    padding: 1rem;
+    border-right: #f0f0f0 0.4rem solid;
+    border-bottom: #f9f9f9 0.1rem solid;
+
+}
+nav li:first-child{
+    border-top: #f9f9f9 0.1rem solid;
+    margin-top: 4rem;
+
+}
+nav li:hover{
+    border-right: #2aabd2 0.4rem solid;
+
+
+}
 nav a{
-    color: rgb(151,151,151);
+    color: #0c3c26;
+    text-align: center;
+}
+nav a:hover{
+    color: #0c3c26;
+    text-align: center;
+}
+#main{
+    padding: 1rem 5rem;
+}
+.lead{
     text-align: right;
+    padding-right: 2rem;
+}
+#jn1{
+    background: url("../img/bg1.jpg");
+    background-size: contain;
+}
+#footer{
+    color: #f0f0f0;
+    background-color: rgb(68,68,68);
+    border-top: #8c8c8c 0.2rem solid;
+    padding: 0.8rem 2rem;
+    text-align: center;
 }
