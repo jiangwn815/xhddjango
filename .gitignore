@@ -3,7 +3,6 @@
 mainpages/__pycache__/
 mainpages/migrations/__pycache__/
 mainpages/static/mainpages/img/Thumbs.db
-templates/
 xhddjango/__pycache__/
 ydys/__pycache__/
 ydys/migrations/__pycache__/
