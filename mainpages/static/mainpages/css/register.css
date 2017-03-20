@@ -1,0 +1,9 @@
+.options{
+    padding: 2rem 2rem;
+}
+.options>button{
+    width: 50%;
+
+    margin-left: 25%;
+    margin-top: 5rem;
+}

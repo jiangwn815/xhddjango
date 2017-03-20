@@ -19,6 +19,10 @@ def index(request):
     return render(request, 'mainpages/index.html', context)  # return a HttpResponse object
 
 
+def register(request):
+    return render(request, 'mainpages/register.html')
+
+
 def showuser(request, mobile):
     """
     try:
@@ -28,6 +32,7 @@ def showuser(request, mobile):
     """
     user = get_object_or_404(User, mobile=mobile)
     return render(request, 'mainpages/show_user.html', {"user": user})
+
 
 
 def info(request, mobile):
