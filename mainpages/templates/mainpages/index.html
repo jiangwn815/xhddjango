@@ -20,10 +20,10 @@
         </a>
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">登录</a>
+            <a class="nav-link register-btn" href="#">登录</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">注册</a>
+            <a class="nav-link register-btn" href="#">注册</a>
           </li>
         </ul>
     </div>
@@ -42,21 +42,27 @@
     </nav>
     <main class="col-10" id="main">
         <div class="jumbotron" id="jn1">
-          <h1 class="display-3">Hello, world!</h1>
-          <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-          <hr class="my-4">
+          <h1>数据深度</h1>
+          <br/>
+          <p class="jn-comment">面向以手机终端作为客户身份验证追踪界面的各行业企业，以批量和实时查询接口的方式对中国电信的
+              用户身份进行核实的数据产品。</p>
+          <br/><br/><br/>
           <p class="lead" >
-            <a class="btn btn-primary btn-lg" href="#" role="button">快速注册</a>
+            <a class="btn register-btn" href="#" role="button">快速注册</a>
           </p>
         </div>
         <div class="jumbotron" id="jn2">
-              <h1 class="display-3">Hello, world!</h1>
-              <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-              <hr class="my-4">
+            <h1>开放有度</h1>
+            <br/>
+              <p class="jn-comment">This is a simple hero unit, a simple jumbotron-style component for calling extra
+                  attention to featured content or information.</p>
+
+            <br/><br/><br/>
               <p class="lead" >
-                <a class="btn btn-primary btn-lg" href="#" role="button">快速注册</a>
+                <a class="btn register-btn" href="#" role="button">快速注册</a>
               </p>
         </div>
+        <div id="user-list" style="display: none">
         {% if latest_user_list %}
             <h3>用户列表</h3>
             <ul class="list-group">
@@ -67,6 +73,7 @@
         {% else %}
             <p>No users are available.</p>
         {% endif %}
+        </div>
     </main>
 </div>
 </div>
