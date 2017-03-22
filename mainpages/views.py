@@ -22,6 +22,9 @@ def index(request):
 def register(request):
     return render(request, 'mainpages/register.html')
 
+def sms(request):
+    return render(request, 'mainpages/sms.html')
+
 
 def showuser(request, mobile):
     """

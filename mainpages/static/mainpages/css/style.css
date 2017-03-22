@@ -40,7 +40,7 @@ nav>ul>li{
 }
 nav li:first-child{
     border-top: #f9f9f9 0.1rem solid;
-    margin-top: 4rem;
+    /*margin-top: 4rem;*/
 }
 nav li:hover{
     border-right: #2aabd2 0.4rem solid;
@@ -68,7 +68,11 @@ body>div>div.row{
     min-height: 31rem;
 }
 #main{
-    padding: 0.5rem 1rem;
+    padding: 1rem 1rem;
+}
+.page-title{
+
+    margin-left: 1rem;
 }
 .lead{
     text-align: right;
