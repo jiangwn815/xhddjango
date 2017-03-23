@@ -1,0 +1,22 @@
+tr>td:last-child{
+    padding: 0.05rem;
+    vertical-align: middle;
+    width: 10rem;
+}
+.sms-btn{
+    color: #2aabd2;
+    font-weight: 600;
+    border: #2aabd2 0.1rem solid;
+    padding: 0.2rem 1rem;
+    background: transparent;
+}
+.sms-btn:first-child{
+    margin-right: 1rem;
+}
+.sms-btn:hover{
+    color: #fff;
+    background-color: #2aabd2;
+}
+.sms-btn:focus,.sms-btn:active,.sms-btn:visited{
+    border: #2aabd2 0.1rem solid !important;
+}

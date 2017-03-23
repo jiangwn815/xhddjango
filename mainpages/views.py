@@ -25,6 +25,11 @@ def register(request):
 def sms(request):
     return render(request, 'mainpages/sms.html')
 
+def smslist(request):
+    return render(request, 'mainpages/sms_list.html')
+
+def smsedit(request):
+    return render(request, 'mainpages/sms_edit.html')
 
 def showuser(request, mobile):
     """

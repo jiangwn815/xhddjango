@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="icon" sizes="200x200" href="{% static 'mainpages/favicon.ico' %}" />
+    <link rel="shortcut icon" href="{% static 'mainpages/favicon.ico' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/sms.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/sms_list.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/bootstrap.css' %}" />
+
+    <title>有度有数</title>
+</head>
+<body>
+<header class="fixed-top">
+    <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'mainpages/img/headerlogo.png' %}" width="140rem">
+        </a>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link register-btn" href="#">登&nbsp&nbsp录</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link register-btn" href="#">注&nbsp&nbsp册</a>
+          </li>
+        </ul>
+    </div>
+
+</header>
+<div class="container-fluid" id="main-body">
+<div class="row">
+    <nav class="col-2 " id="nav">
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link active" href="#">首&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp页</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">个人中心</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">产品介绍</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
+            <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
+        </ul>
+    </nav>
+    <main class="col-10" id="main">
+
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'mainpages:sms' %}">新建短信任务</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">短信任务列表</a>
+          </li>
+        </ul>
+        <div style="padding: 1rem">
+        <table class="table table-striped" style="font-size: 80%;" id="task-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>短信任务名称</th>
+              <th>任务当前状态</th>
+              <th>任务发布时间</th>
+                <th>任务编辑</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>中国银行信用卡推广任务1</td>
+              <td>已发送</td>
+              <td>20170323</td>
+              <td>
+                  <button type="button" class="sms-btn">详情</button>
+                  <button type="button" class="sms-btn">编辑</button>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>中国银行信用卡推广任务1</td>
+              <td>已发送</td>
+              <td>20170323</td>
+              <td>
+                  <button type="button" class="sms-btn">详情</button>
+                  <button type="button" class="sms-btn">编辑</button>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>中国银行信用卡推广任务1</td>
+              <td>已发送</td>
+              <td>20170323</td>
+              <td>
+                  <button type="button" class="sms-btn">详情</button>
+                  <button type="button" class="sms-btn">编辑</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+    </main>
+    <script src="{% static 'mainpages/js/register.js' %}" charset="UTF-8"></script>
+</div>
+</div>
+<footer id="footer">
+    <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
+</footer>
+<script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'mainpages/js/tether.min.js' %}"></script>
+<script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
+</body>
+</html>

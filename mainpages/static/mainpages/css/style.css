@@ -1,6 +1,7 @@
 
 body, button, input, select, textarea{
     font-family: "Microsoft Yahei","Hiragino Sans GB",tahoma,arial !important;
+    outline:none;
   }
 header{
     background-color: rgb(68,68,68);

@@ -10,8 +10,9 @@
     <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/style.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/sms.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/bootstrap.css' %}" />
-
-
+    <script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'mainpages/js/tether.min.js' %}"></script>
+    <script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
     <title>有度有数</title>
 </head>
 <body>
@@ -46,43 +47,33 @@
 
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <a class="nav-link active" href="#">新建短信任务</a>
+            <a class="nav-link" href="{% url 'mainpages:sms' %}">新建短信任务</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'mainpages:smslist' %}">短信任务列表</a>
+          </li>
+            <li class="nav-item">
+            <a class="nav-link active" href="#">编辑短信任务</a>
           </li>
         </ul>
         <div class="form-body">
         <form name="new-task" action="">
             <div class="form-group row">
-                <label for="task-name" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
+                <label for="task-name" class="col-2 col-form-label" style="text-align: center">任务名称：</label>
                 <div class="col-6">
-                    <input type="text" class="form-control" name="task-name" id="task-name">
+                    <p class="form-control-static">中国银行信用卡推广任务1</p>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="sender-number" class="col-2 col-form-label" style="text-align: center">短信发送号码：</label>
-                <div class="col-6">
-                    <input type="text" class="form-control" name="sender-number" id="sender-number">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="send-time" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
-                <div class="col-6">
-                    <input type="text" class="form-control" value="2012-05-15 21:05" id="datetimepicker" name="send-time">
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="task-content" class="col-2 col-form-label" style="text-align: center">短信发送内容：</label>
+                <label for="task-content" class="col-2 col-form-label" style="text-align: center">短信内容：</label>
                 <div class="col-6">
                     <textarea class="form-control" name="task-content" id="task-content" rows="4"></textarea>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="receiver-number" class="col-2 col-form-label" style="text-align: center">目标短信号码：</label>
+                <label for="task-number" class="col-2 col-form-label" style="text-align: center">短信号码：</label>
                 <div class="col-6">
-                    <textarea class="form-control" name="receiver-number" id="receiver-number" rows="4"></textarea>
+                    <textarea class="form-control" name="task-number" id="task-number" rows="4"></textarea>
                 </div>
             </div>
             <div class="form-group row">
@@ -93,15 +84,11 @@
         </form>
         </div>
     </main>
-
+    <script src="{% static 'mainpages/js/register.js' %}" charset="UTF-8"></script>
 </div>
 </div>
 <footer id="footer">
     <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
 </footer>
-<script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
-<script src="{% static 'mainpages/js/tether.min.js' %}"></script>
-<script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
-<script src="{% static 'mainpages/js/sms.js' %}" charset="UTF-8"></script>
 </body>
 </html>

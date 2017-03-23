@@ -1,20 +1,12 @@
-main>ul>li>.nav-link.active{
-    background-color: #f0f3f5 !important;
-    border-color: #ddd #ddd #f0f3f5 !important;
-    color: #2aabd2 !important;
-    font-weight: 600;
-}
-main ul li a{
-    color: #8c8c8c;
-}
-main ul li a:hover{
-    color: #2aabd2;
-}
-.form-body{
-    padding: 1rem;
-    padding-top: 2rem;
-}
-/* datetimepicker css */
+/*!
+ * Datetimepicker for Bootstrap
+ *
+ * Copyright 2012 Stefan Petre
+ * Improvements by Andrew Rowls
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
 .datetimepicker {
 	padding: 4px;
 	margin-top: 1px;
