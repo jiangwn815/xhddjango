@@ -56,37 +56,37 @@
         <form name="new-task" action="">
             <div class="form-group row">
                 <label for="task-name" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
-                <div class="col-6">
+                <div class="col-7">
                     <input type="text" class="form-control" name="task-name" id="task-name">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="sender-number" class="col-2 col-form-label" style="text-align: center">短信发送号码：</label>
-                <div class="col-6">
+                <div class="col-7">
                     <input type="text" class="form-control" name="sender-number" id="sender-number">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="send-time" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
-                <div class="col-6">
+                <div class="col-7">
                     <input type="text" class="form-control" value="2012-05-15 21:05" id="datetimepicker" name="send-time">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="task-content" class="col-2 col-form-label" style="text-align: center">短信发送内容：</label>
-                <div class="col-6">
+                <div class="col-7">
                     <textarea class="form-control" name="task-content" id="task-content" rows="4"></textarea>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="receiver-number" class="col-2 col-form-label" style="text-align: center">目标短信号码：</label>
-                <div class="col-6">
+                <div class="col-7">
                     <textarea class="form-control" name="receiver-number" id="receiver-number" rows="4"></textarea>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="offset-2 col-6">
+                <div class="offset-2 col-7">
                 <button type="submit" class="btn btn-primary btn-block">提交任务</button>
                 </div>
             </div>
@@ -96,7 +96,7 @@
 
 </div>
 </div>
-<footer id="footer">
+<footer id="footer" class="fixed-bottom">
     <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
 </footer>
 <script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
