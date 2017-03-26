@@ -9,7 +9,7 @@ from django.urls import reverse
 
 
 def index(request):
-    latest_user_list = User.objects.order_by("-createdAt")[:3]
+    latest_user_list = User.objects.order_by("-createdAt")
     print(latest_user_list[0].mobile)
     # template = loader.get_template('mainpages/index.html')
     context = {
@@ -23,13 +23,19 @@ def register(request):
     return render(request, 'mainpages/register.html')
 
 def sms(request):
-    return render(request, 'mainpages/sms.html')
+    user_list = User.objects
+    order_list = Order.objects
+    return render(request, 'mainpages/sms.html', {"ul": user_list,"ol": order_list})
 
 def smslist(request):
-    return render(request, 'mainpages/sms_list.html')
+    user_list = User.objects
+    order_list = Order.objects
+    return render(request, 'mainpages/sms_list.html', {"ul": user_list,"ol": order_list})
 
 def smsedit(request):
-    return render(request, 'mainpages/sms_edit.html')
+    user_list = User.objects
+    order_list = Order.objects
+    return render(request, 'mainpages/sms_edit.html', {"ul": user_list,"ol": order_list})
 
 def showuser(request, mobile):
     """
@@ -42,6 +48,10 @@ def showuser(request, mobile):
     return render(request, 'mainpages/show_user.html', {"user": user})
 
 
+def createuser(request):
+    User.objects.create(passwd=request.POST["password"],mobile=request.POST["contactNumber"], nickname=request.POST["userName"])
+    # return render(request, 'mainpages/index.html',{'latest_user_list': latest_user_list})
+    return HttpResponseRedirect(reverse('mainpages:index'))
 
 def info(request, mobile):
     user = get_object_or_404(User, mobile=mobile)

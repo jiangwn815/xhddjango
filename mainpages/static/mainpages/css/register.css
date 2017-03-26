@@ -1,8 +1,18 @@
-.options{
+#registerOptions{
     padding: 2rem 2rem;
 }
-.options>button{
+.form-control-feedback{
+    visibility: hidden;
+    padding-left: 1rem;
+}
+#registerOptions>button{
     width: 25rem;
     margin-left: 20%;
+    margin-top: 2rem;
+}
+#userInfo>div.row{
+    margin-bottom: 0.5rem;
+}
+#register-form-part{
     margin-top: 2rem;
 }
