@@ -7,6 +7,9 @@ function register() {
         $('#registerOptions').css("display","none");
         $('#userInfo').css("display","block");
     });
+    $('#submit-btn').click(function () {
+        $('#registerForm').submit();
+    });
 }
 
 
