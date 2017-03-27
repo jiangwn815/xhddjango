@@ -8,7 +8,17 @@ function register() {
         $('#userInfo').css("display","block");
     });
     $('#submit-btn').click(function () {
-        $('#registerForm').submit();
+        var validation = true;
+        if($('#password').val()!==$('#passwordConfirmation').val()){
+            validation = false;
+        }
+        if($('#userName')===null){
+            validation = false;
+            
+        }
+        if(validation){
+            $('#registerForm').submit();
+        }
     });
 }
 
