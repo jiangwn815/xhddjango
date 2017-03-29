@@ -2,9 +2,8 @@
  * Created by jwn on 21/03/2017.
  */
 'use strict';
-function register() {
-
-    $('#submit-btn').click(function () {
+function validateForm() {
+        console.log("validate form in");
         var validation = true;
         if($('#userName').val()=== ""){
             validation = false;
@@ -13,21 +12,17 @@ function register() {
         }
 
         if($('#password').val()!==$('#passwordConfirmation').val()){
-            console.log("#password value"+$('#password').val());
             validation = false;
         }
         console.log("userName value"+$('#userName').val());
         if($('#userName').val()=== ""){
-            console.log("validation userName value"+$('#userName').val());
-            validation = false;
-            
-        }
 
+            validation = false;
+        }
         if(validation){
             console.log("validation");
             //$('#registerForm').submit();
         }
-    });
 }
 
 
@@ -36,5 +31,11 @@ $(function(){
         $('#registerOptions').css("display","none");
         $('#userInfo').css("display","block");
     });
-    register();
+    $('input[type=text]','$password').each(function(){
+        $(this).focus(function () {
+            $(this).next().css('visibility','hidden');
+            $(this).parent().removeClass('has-danger');
+        });
+    });
+    $('#submit-btn').click(validateForm);
 });
