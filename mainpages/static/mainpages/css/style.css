@@ -7,7 +7,7 @@ header{
     background-color: rgb(68,68,68);
     padding-left: 2rem;
     padding-right: 2rem;
-    border-bottom: #8c8c8c 0.2rem solid;
+    border-bottom: #2aabd2  0.2rem solid;
 }
 header li a.nav-link{
     font-size: 80%;
@@ -19,7 +19,7 @@ header li{
     border-radius: 5%;
 }
 nav{
-    border-right: #8c8c8c 0.1rem solid;
+    border-right: #2aabd2 0.1rem solid;
     height:auto;
     min-height: 31rem;
     background-color: #f0f3f5;
@@ -36,7 +36,7 @@ nav>ul>li{
     padding: 1rem 0rem;
     /*border-right: #f0f0f0 0.4rem solid;
     border-left: #f0f0f0 0.4rem solid;*/
-    border-bottom: #f9f9f9 0.1rem solid;
+    border-bottom: #2aabd2 0.1rem solid;
 
 }
 nav li:first-child{
@@ -52,7 +52,11 @@ nav a{
     color: #fff;
     text-align: center;
 }
-nav a:hover{
+nav a:link,nav a:visited{
+    color: #fff;
+}
+
+nav a:hover,nav a:active{
     /*color: #0c3c26;*/
     color: #2aabd2;
     font-weight: 900;
@@ -107,7 +111,15 @@ a.register-btn:hover{
 #footer{
     color: #f0f0f0;
     background-color: rgb(68,68,68);
-    border-top: #8c8c8c 0.2rem solid;
+    border-top: #2aabd2  0.2rem solid;
     padding: 0.8rem 2rem;
     text-align: center;
+}
+.btn.btn-primary{
+    background-color: #2aabd2;
+    border-color: #2aabd2;
+}
+.btn.btn-primary:hover{
+    background-color: #40d0f0 !important;
+    border-color: #40d0f0 ;
 }
