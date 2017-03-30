@@ -8,6 +8,16 @@
 
 $(function(){
     sms();
+    console.log("function in");
+    $('#testbtn').click(function(){
+        console.log("click in");
+        $.getJSON('api/users',function(re){
+            $.each(re,function(key,value){
+                $('#testid').text(key+":"+value);
+                console.log(key+":"+value);
+            });
+        });
+    })
 });
 
 

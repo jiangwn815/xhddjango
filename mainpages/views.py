@@ -11,10 +11,9 @@ def index(request):
     print(latest_user_list[0].mobile)
     kk = {}
     for e in latest_user_list:
-        kk[e.id] = e.mobile
+        kk[e.mobile] = e.createdAt
         print(kk)
-    if (isinstance(latest_user_list, dict)):
-        print(type(latest_user_list))
+
     # template = loader.get_template('mainpages/index.html')
     context = {
         "latest_user_list": latest_user_list,
@@ -51,9 +50,13 @@ def showuser(request, mobile):
     user = get_object_or_404(User, mobile=mobile)
     return render(request, 'mainpages/show_user.html', {"user": user})
 
+
 def users(request):
     userslist = User.objects.order_by("-createdAt")
-    return JsonResponse(userslist)
+    ul = {}
+    for e in userslist:
+        ul[e.mobile] = e.createdAt
+    return JsonResponse(ul)
 
 
 def createuser(request):

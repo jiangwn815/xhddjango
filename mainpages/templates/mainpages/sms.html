@@ -32,69 +32,70 @@
 
 </header>
 <div class="container-fluid" id="main-body">
-<div class="row">
-    <nav class="col-2 " id="nav">
-        <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link active" href="#">首&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp页</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">个人中心</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">产品介绍</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
-            <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
-        </ul>
-    </nav>
-    <main class="col-10" id="main">
+    <div class="row">
+        <nav class="col-2 " id="nav">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link active" href="#">首&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp页</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">个人中心</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">产品介绍</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
+                <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
+            </ul>
+        </nav>
+        <main class="col-10" id="main">
 
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">新建短信任务</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'mainpages:smslist' %}">短信任务列表</a>
-          </li>
-        </ul>
-        <div class="form-body">
-        <form name="new-task" action="">
-            <div class="form-group row">
-                <label for="task-name" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
-                <div class="col-7">
-                    <input type="text" class="form-control" name="task-name" id="task-name">
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">新建短信任务</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'mainpages:smslist' %}">短信任务列表</a>
+              </li>
+            </ul>
+            <div class="form-body">
+            <form name="new-task" action="">
+                <div class="form-group row">
+                    <label for="task-name" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
+                    <div class="col-7">
+                        <input type="text" class="form-control" name="task-name" id="task-name">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="sender-number" class="col-2 col-form-label" style="text-align: center">短信发送号码：</label>
-                <div class="col-7">
-                    <input type="text" class="form-control" name="sender-number" id="sender-number">
+                <div class="form-group row">
+                    <label for="sender-number" class="col-2 col-form-label" style="text-align: center">短信发送号码：</label>
+                    <div class="col-7">
+                        <input type="text" class="form-control" name="sender-number" id="sender-number">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="send-time" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
-                <div class="col-7">
-                    <input type="text" class="form-control" value="2012-05-15 21:05" id="datetimepicker" name="send-time">
+                <div class="form-group row">
+                    <label for="send-time" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
+                    <div class="col-7">
+                        <input type="text" class="form-control" value="2012-05-15 21:05" id="datetimepicker" name="send-time">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <label for="task-content" class="col-2 col-form-label" style="text-align: center">短信发送内容：</label>
-                <div class="col-7">
-                    <textarea class="form-control" name="task-content" id="task-content" rows="4"></textarea>
+                <div class="form-group row">
+                    <label for="task-content" class="col-2 col-form-label" style="text-align: center">短信发送内容：</label>
+                    <div class="col-7">
+                        <textarea class="form-control" name="task-content" id="task-content" rows="4"></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="receiver-number" class="col-2 col-form-label" style="text-align: center">目标短信号码：</label>
-                <div class="col-7">
-                    <textarea class="form-control" name="receiver-number" id="receiver-number" rows="4"></textarea>
+                <div class="form-group row">
+                    <label for="receiver-number" class="col-2 col-form-label" style="text-align: center">目标短信号码：</label>
+                    <div class="col-7">
+                        <textarea class="form-control" name="receiver-number" id="receiver-number" rows="4"></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="offset-2 col-7">
-                <button type="submit" class="btn btn-primary btn-block">提交任务</button>
+                <div class="form-group row">
+                    <div class="offset-2 col-7">
+                    <button type="submit" class="btn btn-primary btn-block">提交任务</button>
+                    </div>
                 </div>
+            </form>
             </div>
-        </form>
-        </div>
-    </main>
-
-</div>
+        </main>
+        <div id="testid">test div</div>
+        <button type="button" id="testbtn">test</button>
+    </div>
 </div>
 <footer id="footer">
     <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
