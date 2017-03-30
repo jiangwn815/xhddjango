@@ -1,7 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-
-# Create your views here.
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse
 # from django.template import loader
 
 from .models import User, Order
@@ -11,6 +9,12 @@ from django.urls import reverse
 def index(request):
     latest_user_list = User.objects.order_by("-createdAt")
     print(latest_user_list[0].mobile)
+    kk = {}
+    for e in latest_user_list:
+        kk[e.id] = e.mobile
+        print(kk)
+    if (isinstance(latest_user_list, dict)):
+        print(type(latest_user_list))
     # template = loader.get_template('mainpages/index.html')
     context = {
         "latest_user_list": latest_user_list,
@@ -46,6 +50,10 @@ def showuser(request, mobile):
     """
     user = get_object_or_404(User, mobile=mobile)
     return render(request, 'mainpages/show_user.html', {"user": user})
+
+def users(request):
+    userslist = User.objects.order_by("-createdAt")
+    return JsonResponse(userslist)
 
 
 def createuser(request):
