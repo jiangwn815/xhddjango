@@ -64,7 +64,7 @@
                 <th>任务编辑</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="taskList">
             <tr>
               <th scope="row">1</th>
               <td>中国银行信用卡推广任务1</td>
@@ -99,7 +99,7 @@
         </table>
         </div>
     </main>
-    <script src="{% static 'mainpages/js/register.js' %}" charset="UTF-8"></script>
+
 </div>
 </div>
 <footer id="footer" class="fixed-bottom">
@@ -108,5 +108,20 @@
 <script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
 <script src="{% static 'mainpages/js/tether.min.js' %}"></script>
 <script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
+<script>
+    function addTask(no,task){
+
+    }
+    newtr = $('<tr></tr>')
+    newth = $('<th></th>').text("jj").attr('scope','row')
+    newtr.append(newth)
+    $('#taskList').append(newtr)
+    $.getJSON('tasks/index',function(re){
+            $.each(re,function(key,value){
+                $('#testid').text(key+":"+value);
+                console.log(key+":"+value);
+            });
+        });
+</script>
 </body>
 </html>

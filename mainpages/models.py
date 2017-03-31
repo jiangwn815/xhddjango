@@ -48,7 +48,7 @@ class Order(models.Model):
         return self.out_trade_no
 
 
-class YdysTask(models.Model):
+class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     startAt = models.DateTimeField(null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)

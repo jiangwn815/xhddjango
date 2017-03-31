@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
-# from django.template import loader
+from django.forms.models import model_to_dict
 
-from .models import User, Order
+from .models import User, Order, Task
 from django.urls import reverse
 
 
@@ -25,10 +25,12 @@ def index(request):
 def register(request):
     return render(request, 'mainpages/register.html')
 
+
 def sms(request):
     user_list = User.objects
     order_list = Order.objects
     return render(request, 'mainpages/sms.html', {"ul": user_list,"ol": order_list})
+
 
 def smslist(request):
     user_list = User.objects
@@ -53,6 +55,7 @@ def showuser(request, mobile):
 
 def users(request):
     userslist = User.objects.order_by("-createdAt")
+    print(type(userslist))
     ul = {}
     for e in userslist:
         ul[e.mobile] = e.createdAt
@@ -63,6 +66,7 @@ def createuser(request):
     User.objects.create(passwd=request.POST["password"],mobile=request.POST["contactNumber"], nickname=request.POST["userName"])
     # return render(request, 'mainpages/index.html',{'latest_user_list': latest_user_list})
     return HttpResponseRedirect(reverse('mainpages:index'))
+
 
 def info(request, mobile):
     user = get_object_or_404(User, mobile=mobile)
@@ -82,3 +86,12 @@ def useramount(request, mobile):
         selected_order.total_fee = request.POST['amount']
         selected_order.save()
     return HttpResponseRedirect(reverse('mainpages:info', args=(user.mobile,)))
+
+
+def tasks(request):
+    task = Task.objects.order_by("-createdAt")
+    ul = {}
+    for e in task:
+        ul[str(e.id)] = model_to_dict(e)
+    return JsonResponse(ul)
+
