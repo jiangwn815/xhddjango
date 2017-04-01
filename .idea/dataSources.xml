@@ -15,5 +15,13 @@
         <property name="yearIsDateType" value="false" />
       </driver-properties>
     </data-source>
+    <data-source source="LOCAL" name="@localhost [2]" uuid="98f1bfb9-9795-4430-8428-a3017381e530">
+      <driver-ref>db2.jtopen</driver-ref>
+      <jdbc-driver>com.ibm.as400.access.AS400JDBCDriver</jdbc-driver>
+      <jdbc-url>jdbc:as400://localhost:446</jdbc-url>
+      <driver-properties>
+        <property name="prompt" value="false" />
+      </driver-properties>
+    </data-source>
   </component>
 </project>

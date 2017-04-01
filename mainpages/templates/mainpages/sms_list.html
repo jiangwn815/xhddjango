@@ -110,12 +110,20 @@
 <script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
 <script>
     function addTask(no,task){
-
+        var tr = $('<tr></tr>');
+        var thNo = $('<th></th>').text(no).attr('scope','row');
+        var thName = $('<td></td>').text(task.taskName);
+        var thStatus = $('<td></td>').text(task.taskStatus);
+        var thCreated = $('<td></td>').text(task.createdAt);
+        var thEdit = $('<td></td>');
+        var btnDetail = $('<button></button').attr('type','button').addClass('sms-btn').text("详情");
+        var btnEdit = $('<button></button').attr('type','button').addClass('sms-btn').text("编辑");
+        thEdit.append(btnDetail, btnEdit);
+        tr.append(thNo,thName,thStatus, thCreated, thEdit);
+        $('#taskList').append(tr);
     }
-    newtr = $('<tr></tr>')
-    newth = $('<th></th>').text("jj").attr('scope','row')
-    newtr.append(newth)
-    $('#taskList').append(newtr)
+    addTask(4,{"taskName":"ddd","taskStatus":"fanhui","createdAt":"209017"});
+
     $.getJSON('tasks/index',function(re){
             $.each(re,function(key,value){
                 $('#testid').text(key+":"+value);
