@@ -4,6 +4,9 @@ from django.forms.models import model_to_dict
 
 from .models import User, Order, Task
 from django.urls import reverse
+import json, time
+from datetime import datetime
+import calendar
 
 
 def index(request):
@@ -91,7 +94,32 @@ def useramount(request, mobile):
 def tasks(request):
     task = Task.objects.order_by("-createdAt")
     ul = {}
+    no = 1
     for e in task:
-        ul[str(e.id)] = model_to_dict(e)
+        ul[no] = {"id": str(e.id),
+                  "createdAt": json.dumps(calendar.timegm(e.createdAt.timetuple())*1000),
+                  "taskName": e.taskName,
+                  "taskStatus": e.taskStatus}
+        no = no + 1
     return JsonResponse(ul)
 
+
+def createtask(request):
+
+    sendtime = datetime.fromtimestamp(float(request.POST["sendTime"]))
+
+    Task.objects.create(taskName=request.POST["task-name"],
+                        taskContent=request.POST["task-content"],
+                        startAt=sendtime,
+                        taskStatus=request.POST["taskStatus"],
+                        senderNumber=request.POST["sender-number"],
+                        receiverNumber=request.POST["receiver-number"]
+                        )
+    return HttpResponseRedirect(reverse('mainpages:smslist'))
+
+
+def viewtask(request):
+    print(request.GET['id'])
+    task = get_object_or_404(Task, id=request.GET['id'])
+    print(task.taskName)
+    return JsonResponse({})

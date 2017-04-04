@@ -57,50 +57,41 @@
         <table class="table table-striped" style="font-size: 80%;" id="task-table">
           <thead>
             <tr>
-              <th>#</th>
+              <th>序号</th>
+              <th>任务发布时间</th>
               <th>短信任务名称</th>
               <th>任务当前状态</th>
-              <th>任务发布时间</th>
-                <th>任务编辑</th>
+              <th>其他</th>
             </tr>
           </thead>
           <tbody id="taskList">
-            <tr>
-              <th scope="row">1</th>
-              <td>中国银行信用卡推广任务1</td>
-              <td>已发送</td>
-              <td>20170323</td>
-              <td>
-                  <button type="button" class="sms-btn">详情</button>
-                  <button type="button" class="sms-btn">编辑</button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>中国银行信用卡推广任务1</td>
-              <td>已发送</td>
-              <td>20170323</td>
-              <td>
-                  <button type="button" class="sms-btn">详情</button>
-                  <button type="button" class="sms-btn">编辑</button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>中国银行信用卡推广任务1</td>
-              <td>已发送</td>
-              <td>20170323</td>
-              <td>
-                  <button type="button" class="sms-btn">详情</button>
-                  <button type="button" class="sms-btn">编辑</button>
-              </td>
-            </tr>
+
+
           </tbody>
         </table>
         </div>
     </main>
 
 </div>
+</div>
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
 <footer id="footer" class="fixed-bottom">
     <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
@@ -109,25 +100,44 @@
 <script src="{% static 'mainpages/js/tether.min.js' %}"></script>
 <script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
 <script>
+    function formatDate(dateObject){
+
+        var yyyy= dateObject.getFullYear();
+        var mm=(dateObject.getMonth()+1);
+        mm = mm<10?"0"+mm:""+mm;
+        var dd =dateObject.getDate();
+        dd = dd<10?"0"+dd:""+dd;
+        return yyyy+"-"+mm+"-"+dd;
+    }
+
     function addTask(no,task){
         var tr = $('<tr></tr>');
         var thNo = $('<th></th>').text(no).attr('scope','row');
         var thName = $('<td></td>').text(task.taskName);
         var thStatus = $('<td></td>').text(task.taskStatus);
-        var thCreated = $('<td></td>').text(task.createdAt);
-        var thEdit = $('<td></td>');
-        var btnDetail = $('<button></button').attr('type','button').addClass('sms-btn').text("详情");
-        var btnEdit = $('<button></button').attr('type','button').addClass('sms-btn').text("编辑");
-        thEdit.append(btnDetail, btnEdit);
-        tr.append(thNo,thName,thStatus, thCreated, thEdit);
+        var thCreated = $('<td></td>').text(formatDate(new Date(parseFloat(task.createdAt))));
+        var thOther = $('<td></td>');
+        var inputId = $('<input>').attr('type','hidden').val(task.id);
+        var btnDetail = $('<button></button').attr('type','button').addClass('sms-btn detail').text("详情");
+        btnDetail.attr('data-id',task.id).attr('data-toggle','modal').attr('data-target','#detailModal');
+        var btnEdit = $('<button></button').attr('type','button').attr('data-id',task.id).addClass('sms-btn edit').text("变更");
+        var btnDel = $('<button></button').attr('type','button').attr('data-id',task.id).addClass('sms-btn del').text("删除");
+        thOther.append(inputId, btnDetail, btnEdit, btnDel);
+        tr.append(thNo, thCreated,thName,thStatus, thOther);
+        btnDetail.click(function () {
+            var id = $(this).data('id');
+            console.log(id);
+            $.getJSON('tasks/view?id='+id,function(data){
+
+            });
+        });
         $('#taskList').append(tr);
+
     }
-    addTask(4,{"taskName":"ddd","taskStatus":"fanhui","createdAt":"209017"});
 
     $.getJSON('tasks/index',function(re){
             $.each(re,function(key,value){
-                $('#testid').text(key+":"+value);
-                console.log(key+":"+value);
+                addTask(key,value);
             });
         });
 </script>

@@ -39,15 +39,12 @@ $(function(){
         $('#registerOptions').css("display","none");
         $('#userInfo').css("display","block");
     });
-    $('input[type=text]').each(function(){
+    $('input[type=text],#password').each(function(){
         $(this).focus(function () {
             $(this).next().css('visibility','hidden');
             $(this).parent().removeClass('has-danger');
         });
     });
-    $('#password').focus(function(){
-        $(this).next().css('visibility','hidden');
-        $(this).parent().removeClass('has-danger');
-    });
+
     $('#submit-btn').click(validateForm);
 });

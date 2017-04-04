@@ -14,6 +14,10 @@ main ul li a:hover{
     padding: 1rem;
     padding-top: 2rem;
 }
+.form-control-feedback{
+    visibility: hidden;
+    padding-left: 1rem;
+}
 /* datetimepicker css */
 .datetimepicker {
 	padding: 4px;

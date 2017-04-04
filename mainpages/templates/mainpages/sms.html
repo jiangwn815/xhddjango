@@ -53,23 +53,27 @@
               </li>
             </ul>
             <div class="form-body">
-            <form name="new-task" action="">
+            <form name="newTask" id="newTask" action="tasks/create" method="post">
+                {% csrf_token %}
                 <div class="form-group row">
                     <label for="task-name" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
                     <div class="col-7">
                         <input type="text" class="form-control" name="task-name" id="task-name">
+                        <div class="form-control-feedback">请输入短信任务名称</div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="sender-number" class="col-2 col-form-label" style="text-align: center">短信发送号码：</label>
                     <div class="col-7">
                         <input type="text" class="form-control" name="sender-number" id="sender-number">
+                        <div class="form-control-feedback">请输入发送短信的号码</div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="send-time" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
                     <div class="col-7">
-                        <input type="text" class="form-control" value="2012-05-15 21:05" id="datetimepicker" name="send-time">
+                        <input type="text" class="form-control" value="2017-04-03 21:05" id="datetimepicker">
+                        <input type="hidden" name="sendTime" id="sendTime">
                     </div>
                 </div>
 
@@ -77,19 +81,22 @@
                     <label for="task-content" class="col-2 col-form-label" style="text-align: center">短信发送内容：</label>
                     <div class="col-7">
                         <textarea class="form-control" name="task-content" id="task-content" rows="4"></textarea>
+                        <div class="form-control-feedback">请输入发送短信任务内容</div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="receiver-number" class="col-2 col-form-label" style="text-align: center">目标短信号码：</label>
                     <div class="col-7">
                         <textarea class="form-control" name="receiver-number" id="receiver-number" rows="4"></textarea>
+                        <div class="form-control-feedback">请输入接收短信的手机号码清单，各个号码以符号,隔开</div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="offset-2 col-7">
-                    <button type="submit" class="btn btn-primary btn-block">提交任务</button>
+                    <button type="button" id="submit-btn" class="btn btn-primary btn-block">提交任务</button>
                     </div>
                 </div>
+                <input type="hidden" name="taskStatus" id="taskStatus" value="0">
             </form>
             </div>
         </main>

@@ -6,3 +6,6 @@ mainpages/static/mainpages/img/Thumbs.db
 xhddjango/__pycache__/
 ydys/__pycache__/
 ydys/migrations/__pycache__/
+/.idea
+mainpages/migrations/0002_ydystask.py
+mainpages/migrations/0003_auto_20170331_2157.py

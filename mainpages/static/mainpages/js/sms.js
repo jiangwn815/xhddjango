@@ -1,4 +1,28 @@
-﻿function sms() {
+﻿'use strict';
+function validateForm() {
+        var validation = true;
+
+        $('input[type=text],textarea').each(function () {
+            console.log("This value:"+$(this).val());
+            if($(this).val()===""){
+                validation = false;
+                $(this).next().css('visibility','visible');
+                $(this).parent().addClass('has-danger');
+            }
+        });
+        var st = new Date($('#datetimepicker').val());
+        var ts = Date.parse(st)/1000;
+        console.log("ts value:"+ts);
+        $('#sendTime').val(ts);
+        console.log("dp value:"+$('#datetimepicker').val());
+
+        if(validation){
+            console.log("validation!!!");
+            $('#newTask').submit();
+        }
+}
+
+function sms() {
     $('#datetimepicker').datetimepicker({
     format: 'yyyy-mm-dd hh:ii',
     language: 'zh-CN'
@@ -8,9 +32,19 @@
 
 $(function(){
     sms();
+    $('input[type=text],textarea').each(function(){
+        $(this).focus(function () {
+            $(this).next().css('visibility','hidden');
+            $(this).parent().removeClass('has-danger');
+        });
+    });
+    $('#submit-btn').click(validateForm);
+
     console.log("function in");
     $('#testbtn').click(function(){
         console.log("click in");
+
+        console.log(ts);
         $.getJSON('api/users',function(re){
             $.each(re,function(key,value){
                 $('#testid').text(key+":"+value);

@@ -1,22 +1,32 @@
 tr>td:last-child{
     padding: 0.05rem;
     vertical-align: middle;
-    width: 10rem;
+    width: 15rem;
+}
+#task-table th,#task-table td{
+    text-align: center;
 }
 .sms-btn{
-    color: #2aabd2;
+    color: #fff;
     font-weight: 600;
     border: #2aabd2 0.1rem solid;
     padding: 0.2rem 1rem;
-    background: transparent;
+    background-color: #2aabd2;
+    margin-right: 1rem;
 }
 .sms-btn:first-child{
     margin-right: 1rem;
 }
 .sms-btn:hover{
     color: #fff;
-    background-color: #2aabd2;
+    background-color: #40d0f0;
+    border: #40d0f0 0.1rem solid !important;
+    outline: none;
 }
 .sms-btn:focus,.sms-btn:active,.sms-btn:visited{
-    border: #2aabd2 0.1rem solid !important;
+    border: #40d0f0 0.1rem solid !important;
+    outline: none;
+}
+sms-btn:visited{
+    border: #2aabd2 0.1rem solid;
 }
