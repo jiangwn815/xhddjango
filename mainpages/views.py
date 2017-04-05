@@ -122,4 +122,14 @@ def viewtask(request):
     print(request.GET['id'])
     task = get_object_or_404(Task, id=request.GET['id'])
     print(task.taskName)
-    return JsonResponse({})
+    print(task.createdAt)
+    return JsonResponse({
+        "id": task.id,
+        "taskName": task.taskName,
+        "taskContent": task.taskContent,
+        "taskStatus": task.taskStatus,
+        "startAt": json.dumps(calendar.timegm(task.startAt.timetuple())*1000),
+        "createdAt": json.dumps(calendar.timegm(task.createdAt.timetuple())*1000),
+        "senderNumber": task.senderNumber,
+        "receiverNumber": task.receiverNumber
+    })

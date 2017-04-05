@@ -1,11 +1,14 @@
 .idea
-.idea/
+.idea/dataSources
+.idea/workspace.xml
+.idea/modules.xml
 mainpages/__pycache__/
 mainpages/migrations/__pycache__/
 mainpages/static/mainpages/img/Thumbs.db
 xhddjango/__pycache__/
 ydys/__pycache__/
 ydys/migrations/__pycache__/
-/.idea
 mainpages/migrations/0002_ydystask.py
 mainpages/migrations/0003_auto_20170331_2157.py
+mainpages/migrations/0003_auto_20170401_0628.py
+

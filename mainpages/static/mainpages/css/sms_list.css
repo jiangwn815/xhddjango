@@ -30,3 +30,6 @@ tr>td:last-child{
 sms-btn:visited{
     border: #2aabd2 0.1rem solid;
 }
+#detailModal{
+    padding: 2rem;
+}

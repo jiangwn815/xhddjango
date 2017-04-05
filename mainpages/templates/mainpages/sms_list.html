@@ -84,11 +84,39 @@
         </button>
       </div>
       <div class="modal-body">
-        ...
+          <table class="table table-striped">
+
+              <tbody>
+                <tr>
+                  <th scope="row">任务状态</th>
+                  <td id="taskStatus"></td>
+                </tr>
+                <tr>
+                  <th scope="row">创建时间</th>
+                  <td id="createdAt"></td>
+                </tr>
+                <tr>
+                  <th scope="row">发送号码</th>
+                  <td id="senderNumber"></td>
+                </tr>
+                <tr>
+                  <th scope="row">发送时间</th>
+                  <td id="startAt"></td>
+                </tr>
+                <tr>
+                  <th scope="row">发送内容</th>
+                  <td id="taskContent"></td>
+                </tr>
+                <tr>
+                  <th scope="row">目标号码</th>
+                  <td id="receiverNumber"></td>
+                </tr>
+              </tbody>
+            </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" >立即执行</button>
       </div>
     </div>
   </div>
@@ -107,7 +135,11 @@
         mm = mm<10?"0"+mm:""+mm;
         var dd =dateObject.getDate();
         dd = dd<10?"0"+dd:""+dd;
-        return yyyy+"-"+mm+"-"+dd;
+        var hour = dateObject.getHours();
+        hour = hour<10?"0"+hour:""+hour;
+        var minute = dateObject.getMinutes();
+        minute= minute<10?"0"+minute:""+minute;
+        return yyyy+"-"+mm+"-"+dd+" "+hour+":"+minute;
     }
 
     function addTask(no,task){
@@ -128,18 +160,26 @@
             var id = $(this).data('id');
             console.log(id);
             $.getJSON('tasks/view?id='+id,function(data){
+                console.log(data.taskName);
+                $('#detailModalLabel').text(data.taskName);
+                for(var key in data){
+                    if(key==='createdAt'||key==='startAt'){
+                        $('#'+key).text(formatDate(new Date(parseFloat(data[key]))));
+                    }else{
+                        $('#'+key).text(data[key]);
+                    }
 
+                }
             });
         });
         $('#taskList').append(tr);
-
     }
 
     $.getJSON('tasks/index',function(re){
-            $.each(re,function(key,value){
-                addTask(key,value);
-            });
+        $.each(re,function(key,value){
+            addTask(key,value);
         });
+    });
 </script>
 </body>
 </html>
