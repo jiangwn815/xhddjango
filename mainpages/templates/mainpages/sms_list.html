@@ -45,31 +45,77 @@
     </nav>
     <main class="col-10" id="main">
 
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="smsNav">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'mainpages:sms' %}">新建短信任务</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">短信任务列表</a>
+            <a class="nav-link active" href="{% url 'mainpages:smslist' %}">短信任务列表</a>
           </li>
+
         </ul>
-        <div style="padding: 1rem">
-        <table class="table table-striped" style="font-size: 80%;" id="task-table">
-          <thead>
-            <tr>
-              <th>序号</th>
-              <th>任务发布时间</th>
-              <th>短信任务名称</th>
-              <th>任务当前状态</th>
-              <th>其他</th>
-            </tr>
-          </thead>
-          <tbody id="taskList">
-
-
-          </tbody>
-        </table>
+        <div id="taskTablePart">
+            <table class="table table-striped" style="font-size: 80%;" id="task-table">
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>任务发布时间</th>
+                  <th>短信任务名称</th>
+                  <th>任务当前状态</th>
+                  <th>其他</th>
+                </tr>
+              </thead>
+              <tbody id="taskList">
+              </tbody>
+            </table>
         </div>
+        <div id="updateFormPart">
+            <form name="newTask" id="newTask" action="tasks/create" method="post">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="taskName" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
+                    <div class="col-7">
+                        <input type="text" class="form-control" name="taskName" id="taskName">
+                        <div class="form-control-feedback">请输入短信任务名称</div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="UpdateSenderNumber" class="col-2 col-form-label" style="text-align: center">短信发送号码：</label>
+                    <div class="col-7">
+                        <input type="text" class="form-control" name="UpdateSenderNumber" id="UpdateSenderNumber">
+                        <div class="form-control-feedback">请输入发送短信的号码</div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="UpdateSendTime" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
+                    <div class="col-7">
+                        <input type="text" class="form-control" value="2017-04-03 21:05" id="datetimepicker">
+                        <input type="hidden" name="UpdateSendTime" id="UpdateSendTime">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="UpdateTaskContent" class="col-2 col-form-label" style="text-align: center">短信发送内容：</label>
+                    <div class="col-7">
+                        <textarea class="form-control" name="UpdateTaskContent" id="UpdateTaskContent" rows="4"></textarea>
+                        <div class="form-control-feedback">请输入发送短信任务内容</div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="UpdateReceiverNumber" class="col-2 col-form-label" style="text-align: center">目标短信号码：</label>
+                    <div class="col-7">
+                        <textarea class="form-control" name="UpdateReceiverNumber" id="UpdateReceiverNumber" rows="4"></textarea>
+                        <div class="form-control-feedback">请输入接收短信的手机号码清单，各个号码以符号,隔开</div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-2 col-7">
+                    <button type="button" id="submit-btn" class="btn btn-primary btn-block">提交任务</button>
+                    </div>
+                </div>
+                <input type="hidden" name="UpdateTaskStatus" id="UpdateTaskStatus" value="0">
+            </form>
+            </div>
     </main>
 
 </div>
@@ -121,12 +167,12 @@
     </div>
   </div>
 </div>
-<footer id="footer" class="fixed-bottom">
+<footer id="footer">
     <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
 </footer>
+
+
 <script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
-<script src="{% static 'mainpages/js/tether.min.js' %}"></script>
-<script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
 <script>
     function formatDate(dateObject){
 
@@ -153,8 +199,7 @@
         var btnDetail = $('<button></button').attr('type','button').addClass('sms-btn detail').text("详情");
         btnDetail.attr('data-id',task.id).attr('data-toggle','modal').attr('data-target','#detailModal');
         var btnEdit = $('<button></button').attr('type','button').attr('data-id',task.id).addClass('sms-btn edit').text("变更");
-        var btnDel = $('<button></button').attr('type','button').attr('data-id',task.id).addClass('sms-btn del').text("删除");
-        thOther.append(inputId, btnDetail, btnEdit, btnDel);
+        thOther.append(inputId, btnDetail, btnEdit);
         tr.append(thNo, thCreated,thName,thStatus, thOther);
         btnDetail.click(function () {
             var id = $(this).data('id');
@@ -172,9 +217,19 @@
                 }
             });
         });
+        btnEdit.click(function(){
+            $('#smsNav a.active').removeClass('active');
+            var liEdit = $('<li></li>').addClass('nav-item').append($('<a></a>').addClass('nav-link active').text('编辑短信任务'));
+            $('#smsNav').append(liEdit);
+            $('#taskTablePart').hide();
+            $('#updateFormPart').show();
+            var id = $(this).data('id');
+
+
+        });
         $('#taskList').append(tr);
     }
-
+    $('#updateFormPart').hide();
     $.getJSON('tasks/index',function(re){
         $.each(re,function(key,value){
             addTask(key,value);

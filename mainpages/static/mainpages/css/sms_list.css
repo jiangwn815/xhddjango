@@ -1,7 +1,8 @@
 tr>td:last-child{
     padding: 0.05rem;
     vertical-align: middle;
-    width: 15rem;
+    width: 10rem;
+
 }
 #task-table th,#task-table td{
     text-align: center;
@@ -32,4 +33,8 @@ sms-btn:visited{
 }
 #detailModal{
     padding: 2rem;
+}
+#updateFormPart,#taskTablePart{
+    margin-top:2rem;
+    margin-bottom:2rem;
 }
