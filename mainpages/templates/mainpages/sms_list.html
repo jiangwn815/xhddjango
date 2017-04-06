@@ -73,9 +73,9 @@
             <form name="newTask" id="newTask" action="tasks/create" method="post">
                 {% csrf_token %}
                 <div class="form-group row">
-                    <label for="taskName" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
+                    <label for="UpdateTaskName" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
                     <div class="col-7">
-                        <input type="text" class="form-control" name="taskName" id="taskName">
+                        <input type="text" class="form-control" name="UpdateTaskName" id="UpdateTaskName">
                         <div class="form-control-feedback">请输入短信任务名称</div>
                     </div>
                 </div>
@@ -87,10 +87,10 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="UpdateSendTime" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
+                    <label for="UpdateStartAt" class="col-2 col-form-label" style="text-align: center">短信发送时间：</label>
                     <div class="col-7">
                         <input type="text" class="form-control" value="2017-04-03 21:05" id="datetimepicker">
-                        <input type="hidden" name="UpdateSendTime" id="UpdateSendTime">
+                        <input type="hidden" name="UpdateStartAt" id="UpdateStartAt">
                     </div>
                 </div>
 
@@ -110,7 +110,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="offset-2 col-7">
-                    <button type="button" id="submit-btn" class="btn btn-primary btn-block">提交任务</button>
+                    <button type="button" id="submit-btn" class="btn btn-primary btn-block">更新任务</button>
                     </div>
                 </div>
                 <input type="hidden" name="UpdateTaskStatus" id="UpdateTaskStatus" value="0">
@@ -224,12 +224,27 @@
             $('#taskTablePart').hide();
             $('#updateFormPart').show();
             var id = $(this).data('id');
+            $.getJSON('tasks/view?id='+id,function(data){
+                console.log(data.taskName);
 
+                for(var key in data){
+                    console.log(key+":"+data[key]);
+                    if(key==='startAt'){
+                        $('#datetimepicker').val(formatDate(new Date(parseFloat(data[key]))));
+                    }else{
+                        $('#'+'Update'+key.firstUpperCase()).val(data[key]);
+                    }
+
+                }
+            });
 
         });
         $('#taskList').append(tr);
     }
     $('#updateFormPart').hide();
+    String.prototype.firstUpperCase = function () {
+      return this.toString()[0].toUpperCase() + this.toString().slice(1);
+    };
     $.getJSON('tasks/index',function(re){
         $.each(re,function(key,value){
             addTask(key,value);
