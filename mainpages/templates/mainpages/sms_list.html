@@ -70,12 +70,12 @@
             </table>
         </div>
         <div id="updateFormPart">
-            <form name="newTask" id="newTask" action="tasks/create" method="post">
+            <form name="updateTask" id="updateTask" action="tasks/edit" method="get">
                 {% csrf_token %}
                 <div class="form-group row">
                     <label for="UpdateTaskName" class="col-2 col-form-label" style="text-align: center">短信任务名称：</label>
                     <div class="col-7">
-                        <input type="text" class="form-control" name="UpdateTaskName" id="UpdateTaskName">
+                        <input type="text" class="form-control" name="UpdateTaskName" id="UpdateTaskName" disabled>
                         <div class="form-control-feedback">请输入短信任务名称</div>
                     </div>
                 </div>
@@ -108,12 +108,20 @@
                         <div class="form-control-feedback">请输入接收短信的手机号码清单，各个号码以符号,隔开</div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="offset-2 col-7">
-                    <button type="button" id="submit-btn" class="btn btn-primary btn-block">更新任务</button>
+                <div class="form-group offset-2 row">
+                    <div class="col-6">
+                        <button type="button" id="update-btn" class="btn btn-primary btn-block">更新任务</button>
+                    </div>
+                    <div class=" col-2">
+                        <button type="button" id="delete-btn" class="btn btn-danger btn-block">删除任务</button>
                     </div>
                 </div>
                 <input type="hidden" name="UpdateTaskStatus" id="UpdateTaskStatus" value="0">
+                <input type="hidden" name="UpdateTaskId" id="UpdateTaskId">
+            </form>
+            <form name="deleteForm" id="deleteForm" action="tasks/delete" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="DeleteTaskId" id="DeleteTaskId">
             </form>
             </div>
     </main>
@@ -223,6 +231,17 @@
             $('#smsNav').append(liEdit);
             $('#taskTablePart').hide();
             $('#updateFormPart').show();
+            $('#update-btn').click(function(){
+                $('#updateTask').submit();
+            });
+            $('#delete-btn').click(function () {
+
+                $.post('tasks/delete',{id:$('#UpdateTaskId').val(),},function (data) {
+                    if(data['code']==='0'){
+                        top.window.location.href = "smslist";
+                    }
+                });
+            });
             var id = $(this).data('id');
             $.getJSON('tasks/view?id='+id,function(data){
                 console.log(data.taskName);
@@ -231,6 +250,10 @@
                     console.log(key+":"+data[key]);
                     if(key==='startAt'){
                         $('#datetimepicker').val(formatDate(new Date(parseFloat(data[key]))));
+                    }else if(key==='id'){
+
+                        $('#UpdateTaskId,#deletetaskid').val(data[key]);
+
                     }else{
                         $('#'+'Update'+key.firstUpperCase()).val(data[key]);
                     }

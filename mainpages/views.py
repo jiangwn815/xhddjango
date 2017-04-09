@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 
 from .models import User, Order, Task
@@ -133,3 +134,9 @@ def viewtask(request):
         "senderNumber": task.senderNumber,
         "receiverNumber": task.receiverNumber
     })
+
+@csrf_exempt
+def deletetask(request):
+    task = get_object_or_404(Task, id=request.POST['id'])
+    task.delete()
+    return JsonResponse({"code": "0"})
