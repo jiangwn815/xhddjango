@@ -16,3 +16,9 @@
 #register-form-part{
     margin-top: 2rem;
 }
+#breadcrumbBar>div{
+    color: #002a80;
+    background: #8c8c8c;
+    background: linear-gradient(135deg, transparent 15px, #58a 0) top left,
+    linear-gradient(-135deg, transparent 15px, #655 0) top right;
+}
