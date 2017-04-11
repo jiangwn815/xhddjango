@@ -38,6 +38,7 @@ $(function(){
     $('#onlineRegister').click(function () {
         $('#registerOptions').css("display","none");
         $('#userInfo').css("display","block");
+        $('#breadcrumbBar').css("display","flex");
     });
     $('input[type=text],#password').each(function(){
         $(this).focus(function () {

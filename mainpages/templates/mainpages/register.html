@@ -50,10 +50,10 @@
             <br/>
             <button type="button" class="btn btn-primary btn-lg" id="tryContact">联系一下</button>
         </div>
-        <div id="breadcrumbBar" class="row">
-            <div id="firstStep" class="offset-2 col-2">创建用户</div>
-            <div id="secondStep" class="col-2">申请服务</div>
-            <div id="thirdStep" class="col-2">提交材料</div>
+        <div id="breadcrumbBar" class="row" style="display: none">
+            <div id="firstStep" class="offset-2 col-2"><span class="active">创建用户</span></div>
+            <div id="secondStep" class="col-2"><span>申请服务</span></div>
+            <div id="thirdStep" class="col-2"><span>提交材料</span></div>
         </div>
         <div id="register-form-part">
             <form name="registerForm" id="registerForm" action="{% url 'mainpages:createuser' %}" method="post">

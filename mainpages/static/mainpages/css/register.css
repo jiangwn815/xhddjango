@@ -16,9 +16,28 @@
 #register-form-part{
     margin-top: 2rem;
 }
-#breadcrumbBar>div{
-    color: #002a80;
-    background: #8c8c8c;
-    background: linear-gradient(135deg, transparent 15px, #58a 0) top left,
-    linear-gradient(-135deg, transparent 15px, #655 0) top right;
+#breadcrumbBar{
+    margin: 2rem auto;
+}
+#breadcrumbBar>div>span{
+    color: #fff;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background:linear-gradient(135deg, transparent 0px,#7c7c7c  0) top left,
+          linear-gradient(-135deg, transparent 0.8rem, #7c7c7c 0) top right,
+          linear-gradient(-45deg, transparent 0.8rem, #7c7c7c 0) bottom right,
+          linear-gradient(45deg, transparent 0rem, #7c7c7c 0) bottom left;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+
+}
+#breadcrumbBar>div>span.active{
+    background:linear-gradient(135deg, transparent 0px,#2aabd2  0) top left,
+          linear-gradient(-135deg, transparent 0.8rem, #2aabd2 0) top right,
+          linear-gradient(-45deg, transparent 0.8rem, #2aabd2 0) bottom right,
+          linear-gradient(45deg, transparent 0rem, #2aabd2 0) bottom left;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
 }
