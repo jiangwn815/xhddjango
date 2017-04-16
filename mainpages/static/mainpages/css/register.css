@@ -29,7 +29,7 @@
           linear-gradient(-135deg, transparent 0.8rem, #7c7c7c 0) top right,
           linear-gradient(-45deg, transparent 0.8rem, #7c7c7c 0) bottom right,
           linear-gradient(45deg, transparent 0rem, #7c7c7c 0) bottom left;
-    background-size: 50% 50%;
+    background-size: 60% 60%;
     background-repeat: no-repeat;
 
 }
@@ -38,6 +38,6 @@
           linear-gradient(-135deg, transparent 0.8rem, #2aabd2 0) top right,
           linear-gradient(-45deg, transparent 0.8rem, #2aabd2 0) bottom right,
           linear-gradient(45deg, transparent 0rem, #2aabd2 0) bottom left;
-    background-size: 50% 50%;
+    background-size: 60% 60%;
     background-repeat: no-repeat;
 }

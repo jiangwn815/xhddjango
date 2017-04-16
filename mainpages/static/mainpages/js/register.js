@@ -38,7 +38,7 @@ $(function(){
     $('#onlineRegister').click(function () {
         $('#registerOptions').css("display","none");
         $('#userInfo').css("display","block");
-        $('#serviceSelection').css("display","block");
+        $('#serviceSelection').css("display","flex");
         $('#breadcrumbBar').css("display","flex");
     });
     $('input[type=text],#password').each(function(){
