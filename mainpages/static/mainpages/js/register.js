@@ -38,9 +38,17 @@ $(function(){
     $('#onlineRegister').click(function () {
         $('#registerOptions').css("display","none");
         $('#userInfo').css("display","block");
-        $('#serviceSelection').css("display","flex");
+
         $('#breadcrumbBar').css("display","flex");
     });
+    $('#nextStep').click(function () {
+        $('#userInfo').css("display","none");
+        $('#serviceSelection').css("display","block");
+        $('#firstStep>span').removeClass("active");
+        $('#secondStep>span').addClass("active");
+        console.log($('#secondStep>span').val());
+    });
+
     $('input[type=text],#password').each(function(){
         $(this).focus(function () {
             $(this).next().css('visibility','hidden');

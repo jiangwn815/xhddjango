@@ -41,3 +41,32 @@
     background-size: 60% 60%;
     background-repeat: no-repeat;
 }
+#serviceSelection{
+    margin-top: 4rem;
+}
+#serviceSelection>div{
+    margin-bottom: 2rem;
+}
+h1>i{
+    margin-left: 12%;
+    margin-right:5%;
+    font-size: 140%;
+
+}
+.card-block>h1>span{
+    font-size: 150%;
+}
+.card-block>button{
+    margin-left: 60%;
+    color: #000;
+    background: #fff !important;
+    border-color: #2aabd2;
+
+}
+#serviceSelection .card:hover{
+    border: #2aabd2 0.05rem solid;
+
+    background: #2aabd2;
+    color: #fff;
+    box-shadow: 0 0 0.2rem 0.2rem rgba(42, 171, 210, 0.25);
+}
