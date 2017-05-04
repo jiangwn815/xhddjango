@@ -46,6 +46,9 @@ $(function(){
         $('#serviceSelection').css("display","block");
         $('#firstStep>span').removeClass("active");
         $('#secondStep>span').addClass("active");
+        $('#identifyBtn').click(function () {
+            $('#serviceInfo').css("display","block");
+        });
         console.log($('#secondStep>span').val());
     });
 

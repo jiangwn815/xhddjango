@@ -70,3 +70,13 @@ h1>i{
     color: #fff;
     box-shadow: 0 0 0.2rem 0.2rem rgba(42, 171, 210, 0.25);
 }
+#serviceSidebar{
+    width: 8rem;
+}
+#serviceSidebar .card-block{
+    padding: 0.5rem;
+}
+#serviceSidebar .card-block>h1{
+    font-size: 1.2rem;
+    padding: 0.5rem;
+}
