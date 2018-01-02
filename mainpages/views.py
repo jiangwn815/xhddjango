@@ -30,6 +30,15 @@ def register(request):
     return render(request, 'mainpages/register.html')
 
 
+def crawler(request):
+    return render(request, 'mainpages/crawler.html')
+
+
+def crawlerpic(request):
+    ul = {}
+    print("work!")
+    return JsonResponse(ul)
+
 def sms(request):
     user_list = User.objects
     order_list = Order.objects
