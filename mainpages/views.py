@@ -6,6 +6,8 @@ from django.forms.models import model_to_dict
 from .models import User, Order, Task
 from django.urls import reverse
 import json, time
+import requests
+from bs4 import BeautifulSoup
 from datetime import datetime
 import calendar
 
@@ -36,13 +38,20 @@ def crawler(request):
 
 def crawlerpic(request):
     ul = {}
-    print("work!")
+    headers = {"User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Mobile Safari/537.36"}
+    r = requests.get("http://wapbj.189.cn/menu/treeMenuColorIndex.action", headers)
+    soup = BeautifulSoup(r.text, 'lxml')
+    lists = soup.find_all('img')
+    for li in lists:
+        print(li['src'])
+
+
     return JsonResponse(ul)
 
 def sms(request):
     user_list = User.objects
     order_list = Order.objects
-    return render(request, 'mainpages/sms.html', {"ul": user_list,"ol": order_list})
+    return render(request, 'mainpages/sms.html', {"ul": user_list, "ol": order_list})
 
 
 def smslist(request):
