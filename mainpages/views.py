@@ -43,7 +43,7 @@ def crawlerpic(request):
     soup = BeautifulSoup(r.text, 'lxml')
     lists = soup.find_all('img')
     for li in lists:
-        print(li['src'])
+        print(li)
 
 
     return JsonResponse(ul)
