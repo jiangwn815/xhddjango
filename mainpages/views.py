@@ -7,6 +7,8 @@ from .models import User, Order, Task
 from django.urls import reverse
 import json, time
 import requests
+import os
+import re
 from bs4 import BeautifulSoup
 from datetime import datetime
 import calendar
@@ -38,14 +40,37 @@ def crawler(request):
 
 def crawlerpic(request):
     ul = {}
-    headers = {"User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Mobile Safari/537.36"}
-    r = requests.get("http://wapbj.189.cn/menu/treeMenuColorIndex.action", headers)
+    url = "https://m.meitulu.com/item/6932.html"
+    headers = {"User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 "
+                            "(KHTML, like Gecko) Chrome/63.0.3239.84 Mobile Safari/537.36"}
+    r = requests.get(url, headers)
     soup = BeautifulSoup(r.text, 'lxml')
-    lists = soup.find_all('img')
+    lists = soup.find_all('img', class_="content_img")
+
     for li in lists:
-        print(li)
+        picname = "".join(li['src'].split(r'/')[-2:-1])
+        print(li['src'].split(r'/')[-2:])
+        print(picname)
+        if 1:
+            continue
+        picurl = li['src']
+        try:
+            picdata = requests.get(picurl, timeout=10)
+            print("len:{0:.2f} KB".format(len(picdata.content)/1024))
+        except requests.exceptions.ConnectionError:
+            print(li['src'].split(r'/')[-1]+" 无法下载")
+            continue
+        if len(picdata.content)/1024 > 100:
+            continue
+        filename = li['src'].split(r'/')[-1]
+        while os.path.exists('./mainpages/download/'+filename):
+            filename = filename.split(r'.')[0]+"-1."+filename.split(r'.')[1]
+        picfile = open('./mainpages/download/'+filename, 'wb')
+        picfile.write(picdata.content)
+        picfile.close()
+        # f.write("http://wapbj.189.cn"+li['src'].split('\/')[-1]+"\n")
 
-
+    # f.close()
     return JsonResponse(ul)
 
 def sms(request):
