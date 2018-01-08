@@ -38,39 +38,57 @@ def crawler(request):
     return render(request, 'mainpages/crawler.html')
 
 
+def downloadpic(picurl, picname, piclimit=100):
+    headers = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like "
+                             "Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1",
+               "Referer": "https://m.meitulu.com/item/6932.html",
+               "Connection": "keep-alive",
+               "Pragma": "no-cache",
+               "Host": "mtl.ttsqgs.com",
+               "Accept-Encoding": "gzip, deflate, br",
+               "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+               "Accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+               "Cache-Control": "no-cache"
+               }
+
+    try:
+        picdata = requests.get(picurl, headers=headers, timeout=20)
+        print("{0} len:{1:.2f} KB".format(picurl, len(picdata.content) / 1024))
+    except requests.exceptions.ConnectionError:
+        print(picname + " 无法下载")
+        return
+    if len(picdata.content) / 1024 < piclimit:
+        return
+
+    filename = picname
+    while os.path.exists('./mainpages/download/' + filename):
+        filename = filename.split(r'.')[0] + "-1." + filename.split(r'.')[1]
+    with open('./mainpages/download/' + filename, 'wb') as picfile:
+        picfile.write(picdata.content)
+
+
 def crawlerpic(request):
     ul = {}
-    url = "https://m.meitulu.com/item/6932.html"
-    headers = {"User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 "
-                            "(KHTML, like Gecko) Chrome/63.0.3239.84 Mobile Safari/537.36"}
-    r = requests.get(url, headers)
-    soup = BeautifulSoup(r.text, 'lxml')
-    lists = soup.find_all('img', class_="content_img")
+    target_url = "https://m.meitulu.com/item/6932.html"
+    home_r = requests.get(target_url)
+    home_soup = BeautifulSoup(home_r.text, 'lxml')
+    url_list = home_soup.find('div', id='pages').find_all('a')[1:-1]
 
-    for li in lists:
-        picname = "".join(li['src'].split(r'/')[-2:-1])
-        print(li['src'].split(r'/')[-2:])
-        print(picname)
-        if 1:
-            continue
-        picurl = li['src']
-        try:
-            picdata = requests.get(picurl, timeout=10)
-            print("len:{0:.2f} KB".format(len(picdata.content)/1024))
-        except requests.exceptions.ConnectionError:
-            print(li['src'].split(r'/')[-1]+" 无法下载")
-            continue
-        if len(picdata.content)/1024 > 100:
-            continue
-        filename = li['src'].split(r'/')[-1]
-        while os.path.exists('./mainpages/download/'+filename):
-            filename = filename.split(r'.')[0]+"-1."+filename.split(r'.')[1]
-        picfile = open('./mainpages/download/'+filename, 'wb')
-        picfile.write(picdata.content)
-        picfile.close()
-        # f.write("http://wapbj.189.cn"+li['src'].split('\/')[-1]+"\n")
+    for url in url_list:
+        url = target_url.split(r'/item')[0]+url['href']
+        print(url)
+        continue
+        r = requests.get(url)
+        print("Headers", r.request.headers)
+        img_soup = BeautifulSoup(r.text, 'lxml')
+        img_lists = img_soup.find_all('img')
+        # lists = soup.find_all('img', class_="content_img")
 
-    # f.close()
+        for li in img_lists:
+            picname = "".join(li['src'].split(r'/')[-2:])
+            picurl = li['src']
+            downloadpic(picurl, picname)
+
     return JsonResponse(ul)
 
 def sms(request):
