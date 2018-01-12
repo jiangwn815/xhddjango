@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^sms$', views.sms, name='sms'),
     url(r'^crawler$', views.crawler, name='crawler'),
     url(r'^crawlerpic$', views.crawlerpic, name='crawlerpic'),
+    url(r'^bjdata$', views.bjdata, name='bjdata'),
     url(r'^smslist$', views.smslist, name='smslist'),
     url(r'^smsedit$', views.smsedit, name='smsedit'),
     url(r'^createuser$', views.createuser, name='createuser'),
