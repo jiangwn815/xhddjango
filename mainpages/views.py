@@ -38,7 +38,7 @@ def register(request):
 def crawler(request):
     return render(request, 'mainpages/crawler.html')
 
-
+# 下载文件（文件地址，文件名字，目标地址，文件大小阈值）
 def downloadpic(picurl, picname, target_url, piclimit=100):
     headers = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like "
                              "Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1",
@@ -70,17 +70,17 @@ def downloadpic(picurl, picname, target_url, piclimit=100):
         picfile.write(picdata.content)
     return size
 
-
+# 解压某目录下所有压缩文件
 def bjdata(request):
     ul = {}
     zippath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码'
-    for filename in os.listdir(zippath):
+    for filename in os.listdir(zippath):  # 遍历目标目录下所有文件和文件夹
         fn = os.path.join(zippath, filename)
-        if os.path.isfile(fn) and fn.endswith('.zip'):
+        if os.path.isfile(fn) and fn.endswith('.zip'):  # 判断是否为压缩文件
             unzipfiles = zipfile.ZipFile(fn, 'r')  # 创建zipfile对象
-            for unzipfile in unzipfiles.namelist(): #获取压缩文件中所有文件
+            for unzipfile in unzipfiles.namelist():  # 获取压缩文件中所有文件
                 print("Unzipfile", unzipfile)
-                unzipfiles.extract(unzipfile, zippath)
+                unzipfiles.extract(unzipfile, zippath)  # 从压缩文件中解压某个文件
     return JsonResponse(ul)
 
 def printstatus(res):
