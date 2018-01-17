@@ -13,6 +13,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import calendar
 import zipfile
+import csv
+import codecs
 
 
 def index(request):
@@ -76,11 +78,24 @@ def bjdata(request):
     zippath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码'
     for filename in os.listdir(zippath):  # 遍历目标目录下所有文件和文件夹
         fn = os.path.join(zippath, filename)
+        '''
         if os.path.isfile(fn) and fn.endswith('.zip'):  # 判断是否为压缩文件
             unzipfiles = zipfile.ZipFile(fn, 'r')  # 创建zipfile对象
             for unzipfile in unzipfiles.namelist():  # 获取压缩文件中所有文件
                 print("Unzipfile", unzipfile)
                 unzipfiles.extract(unzipfile, zippath)  # 从压缩文件中解压某个文件
+        '''
+        #newfile = os.path
+        if os.path.isfile(fn) and fn.endswith('.csv'):
+            print("Open file:", fn)
+            with open()
+                with codecs.open(fn, "r", encoding="gbk", errors='ignore') as csvfile:
+                    csvreader = csv.reader(csvfile)
+                    i = 0
+                    for row in csvreader:
+                        i = i+1
+                        print(i,":","-".join(row))
+
     return JsonResponse(ul)
 
 def printstatus(res):
