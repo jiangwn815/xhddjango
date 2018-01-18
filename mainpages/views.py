@@ -85,15 +85,27 @@ def bjdata(request):
                 print("Unzipfile", unzipfile)
                 unzipfiles.extract(unzipfile, zippath)  # 从压缩文件中解压某个文件
         '''
-        #newfile = os.path
-        if os.path.isfile(fn) and fn.endswith('.csv'):
+
+        if os.path.isfile(fn) and fn.endswith('.csv') and "utf8" not in fn:
+            newfile = os.path.join(zippath, fn.split(r'.')[0]+"utf8.csv")
             print("Open file:", fn)
-            with open()
-                with codecs.open(fn, "r", encoding="gbk", errors='ignore') as csvfile:
+            print("New file:", newfile)
+            with open(newfile, "wb") as csvutf8:
+                csvutf8.write(codecs.BOM_UTF8)
+
+            with open(newfile, "ab") as csvutf8:
+                #csvutf8.write(codecs.BOM_UTF8)
+                csvutf8writer = csv.writer(csvutf8, dialect='excel')
+                with codecs.open(fn, "rb", encoding="gbk") as csvfile:
                     csvreader = csv.reader(csvfile)
+                    print("csvreader type:", type(csvreader))
                     i = 0
                     for row in csvreader:
                         i = i+1
+                        print("row type:",type(row))
+                        csvutf8writer.writerow(row)
+                        if(i>20):
+                            break
                         print(i,":","-".join(row))
 
     return JsonResponse(ul)
