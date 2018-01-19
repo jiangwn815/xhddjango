@@ -14,7 +14,8 @@ from datetime import datetime
 import calendar
 import zipfile
 import csv
-import codecs
+import codecs, chardet
+from openpyxl import Workbook, load_workbook
 
 
 def index(request):
@@ -72,10 +73,24 @@ def downloadpic(picurl, picname, target_url, piclimit=100):
         picfile.write(picdata.content)
     return size
 
+
+def mergexl(filelist):
+
+    for x in [x for x in filelist if "utf8" in x and x.endswith('.csv')]:
+        with open(x) as csvfile:
+            csvreader = csv.reader(csvfile)
+            for x, row in enumerate(csvreader):
+                print("LINE {0}:{1}".format(x,row))
+                for y, col in enumerate(row):
+                    print("  ROW {0}:{1}".format(y,col))
+
+
+
 # 解压某目录下所有压缩文件
 def bjdata(request):
     ul = {}
     zippath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码'
+
     for filename in os.listdir(zippath):  # 遍历目标目录下所有文件和文件夹
         fn = os.path.join(zippath, filename)
         '''
@@ -85,28 +100,35 @@ def bjdata(request):
                 print("Unzipfile", unzipfile)
                 unzipfiles.extract(unzipfile, zippath)  # 从压缩文件中解压某个文件
         '''
-
+        newfile = ""
         if os.path.isfile(fn) and fn.endswith('.csv') and "utf8" not in fn:
             newfile = os.path.join(zippath, fn.split(r'.')[0]+"utf8.csv")
-            print("Open file:", fn)
+            fncharset = chardet.detect(open(fn, "rb").read()) # 检测文件编码方式
+            print("Open file:{0} Charset:{1}".format(filename, fncharset))
             print("New file:", newfile)
-            with open(newfile, "wb") as csvutf8:
-                csvutf8.write(codecs.BOM_UTF8)
+            with open(newfile, "wb") as csvutf8: # w模式会把已存内容全部擦掉
+                csvutf8.write(codecs.BOM_UTF8) # 开头写入BOM防止win系统乱码
 
-            with open(newfile, "ab") as csvutf8:
-                #csvutf8.write(codecs.BOM_UTF8)
+            with open(newfile, "a") as csvutf8:
+
                 csvutf8writer = csv.writer(csvutf8, dialect='excel')
-                with codecs.open(fn, "rb", encoding="gbk") as csvfile:
+                with codecs.open(fn, "r", encoding="gbk") as csvfile:
                     csvreader = csv.reader(csvfile)
                     print("csvreader type:", type(csvreader))
                     i = 0
                     for row in csvreader:
                         i = i+1
-                        print("row type:",type(row))
+                        #print("row type:",type(row[0]))
+                        #print("row 1:",row[0],row[0].encode("utf-8"))
+                        #print(i, ":", "-".join(row))
+                        #print([x.encode("utf-8") for x in row])
                         csvutf8writer.writerow(row)
                         if(i>20):
                             break
-                        print(i,":","-".join(row))
+                        #print(i,":","-".join(row))
+    filelist = [os.path.join(zippath, filename) for filename in os.listdir(zippath)]
+    mergexl([fn for fn in filelist if os.path.isfile(fn)])
+
 
     return JsonResponse(ul)
 
