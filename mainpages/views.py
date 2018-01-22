@@ -85,6 +85,34 @@ def mergexl(filelist):
                     print("  ROW {0}:{1}".format(y,col))
 
 
+def toutf8(fn):
+    if os.path.isfile(fn) and fn.endswith('.csv') and "utf8" not in fn:
+        zippath = '/'.join(fn.split(r'/')[0:-1])
+        newfile = os.path.join(zippath, fn.split(r'.')[0] + "utf8.csv")
+        fncharset = chardet.detect(open(fn, "rb").read())  # 检测文件编码方式
+        print("Open file:{0} Charset:{1}".format(filename, fncharset))
+        print("New file:", newfile)
+        with open(newfile, "wb") as csvutf8:  # w模式会把已存内容全部擦掉
+            csvutf8.write(codecs.BOM_UTF8)  # 开头写入BOM防止win系统乱码
+
+        with open(newfile, "a") as csvutf8:
+
+            csvutf8writer = csv.writer(csvutf8, dialect='excel')
+            with codecs.open(fn, "r", encoding="gbk") as csvfile:
+                csvreader = csv.reader(csvfile)
+                print("csvreader type:", type(csvreader))
+                i = 0
+                for row in csvreader:
+                    i = i + 1
+                    # print("row type:",type(row[0]))
+                    # print("row 1:",row[0],row[0].encode("utf-8"))
+                    # print(i, ":", "-".join(row))
+                    # print([x.encode("utf-8") for x in row])
+                    csvutf8writer.writerow(row)
+                    if (i > 20):
+                        break
+                    # print(i,":","-".join(row))
+
 
 # 解压某目录下所有压缩文件
 def bjdata(request):
@@ -93,13 +121,14 @@ def bjdata(request):
 
     for filename in os.listdir(zippath):  # 遍历目标目录下所有文件和文件夹
         fn = os.path.join(zippath, filename)
+        toutf8(fn)
         '''
         if os.path.isfile(fn) and fn.endswith('.zip'):  # 判断是否为压缩文件
             unzipfiles = zipfile.ZipFile(fn, 'r')  # 创建zipfile对象
             for unzipfile in unzipfiles.namelist():  # 获取压缩文件中所有文件
                 print("Unzipfile", unzipfile)
                 unzipfiles.extract(unzipfile, zippath)  # 从压缩文件中解压某个文件
-        '''
+        
         newfile = ""
         if os.path.isfile(fn) and fn.endswith('.csv') and "utf8" not in fn:
             newfile = os.path.join(zippath, fn.split(r'.')[0]+"utf8.csv")
@@ -126,6 +155,7 @@ def bjdata(request):
                         if(i>20):
                             break
                         #print(i,":","-".join(row))
+        '''
     filelist = [os.path.join(zippath, filename) for filename in os.listdir(zippath)]
     mergexl([fn for fn in filelist if os.path.isfile(fn)])
 
