@@ -74,23 +74,25 @@ def downloadpic(picurl, picname, target_url, piclimit=100):
     return size
 
 
-def mergexl(filelist):
+def mergexl(file,ws):
 
-    for x in [x for x in filelist if "utf8" in x and x.endswith('.csv')]:
-        with open(x) as csvfile:
-            csvreader = csv.reader(csvfile)
-            for x, row in enumerate(csvreader):
-                print("LINE {0}:{1}".format(x,row))
-                for y, col in enumerate(row):
-                    print("  ROW {0}:{1}".format(y,col))
+    # for x in [x for x in filelist if "utf8" in x and x.endswith('.csv')]:
+    with open(file) as csvfile:
+        csvreader = csv.reader(csvfile)
+        for x, row in enumerate(csvreader):
+
+            for y, value in enumerate(row):
+
+                ws.cell(row=x+1, column=y+1, value=value)
 
 
 def toutf8(fn):
+    newfile = ""
     if os.path.isfile(fn) and fn.endswith('.csv') and "utf8" not in fn:
         zippath = '/'.join(fn.split(r'/')[0:-1])
         newfile = os.path.join(zippath, fn.split(r'.')[0] + "utf8.csv")
         fncharset = chardet.detect(open(fn, "rb").read())  # 检测文件编码方式
-        print("Open file:{0} Charset:{1}".format(filename, fncharset))
+        print("Open file:{0} Charset:{1}".format(fn, fncharset))
         print("New file:", newfile)
         with open(newfile, "wb") as csvutf8:  # w模式会把已存内容全部擦掉
             csvutf8.write(codecs.BOM_UTF8)  # 开头写入BOM防止win系统乱码
@@ -109,19 +111,23 @@ def toutf8(fn):
                     # print(i, ":", "-".join(row))
                     # print([x.encode("utf-8") for x in row])
                     csvutf8writer.writerow(row)
-                    if (i > 20):
-                        break
+
                     # print(i,":","-".join(row))
+    if newfile:
+        print("return!!")
+        return newfile
 
 
 # 解压某目录下所有压缩文件
 def bjdata(request):
-    ul = {}
+    ul = {"utf8file":{}}
     zippath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码'
 
     for filename in os.listdir(zippath):  # 遍历目标目录下所有文件和文件夹
         fn = os.path.join(zippath, filename)
-        toutf8(fn)
+        utf8file = toutf8(fn)
+        if utf8file:
+            ul["utf8file"][utf8file.split('.')[0].split(r'/')[-1]] = utf8file
         '''
         if os.path.isfile(fn) and fn.endswith('.zip'):  # 判断是否为压缩文件
             unzipfiles = zipfile.ZipFile(fn, 'r')  # 创建zipfile对象
@@ -156,8 +162,15 @@ def bjdata(request):
                             break
                         #print(i,":","-".join(row))
         '''
-    filelist = [os.path.join(zippath, filename) for filename in os.listdir(zippath)]
-    mergexl([fn for fn in filelist if os.path.isfile(fn)])
+    print(ul["utf8file"])
+    # filelist = [os.path.join(zippath, filename) for filename in os.listdir(zippath)]
+    # mergexl([fn for fn in filelist if os.path.isfile(fn)])
+    wb = Workbook()
+    for filename, filepath in ul["utf8file"].items():
+        ws = wb.create_sheet(filename)
+        mergexl(filepath, ws)
+    wb.save(zippath+"/merge.xlsx")
+    print("SHEET NAMES:", wb.sheetnames)
 
 
     return JsonResponse(ul)
