@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'mainpages.apps.MainpagesConfig',
+    'datamining.apps.DataminingConfig',
     'xhddjango.apps.XhddjangoConfig',
     'ydys.apps.YdysConfig',
     'django.contrib.admin',

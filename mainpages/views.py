@@ -74,23 +74,21 @@ def downloadpic(picurl, picname, target_url, piclimit=100):
     return size
 
 
+# 打开某个csv文件并写入传入的sheet
 def mergexl(file,ws):
-
-    # for x in [x for x in filelist if "utf8" in x and x.endswith('.csv')]:
     with open(file) as csvfile:
         csvreader = csv.reader(csvfile)
         for x, row in enumerate(csvreader):
-
             for y, value in enumerate(row):
-
                 ws.cell(row=x+1, column=y+1, value=value)
 
 
+# 将某文件转换为UTF-8编码
 def toutf8(fn):
     newfile = ""
     if os.path.isfile(fn) and fn.endswith('.csv') and "utf8" not in fn:
         zippath = '/'.join(fn.split(r'/')[0:-1])
-        newfile = os.path.join(zippath, fn.split(r'.')[0] + "utf8.csv")
+        newfile = os.path.join(zippath, fn.split(r'.')[0] + "utf8.csv") # 创建带有utf8的文件名
         fncharset = chardet.detect(open(fn, "rb").read())  # 检测文件编码方式
         print("Open file:{0} Charset:{1}".format(fn, fncharset))
         print("New file:", newfile)
@@ -99,22 +97,12 @@ def toutf8(fn):
 
         with open(newfile, "a") as csvutf8:
 
-            csvutf8writer = csv.writer(csvutf8, dialect='excel')
-            with codecs.open(fn, "r", encoding="gbk") as csvfile:
+            csvutf8writer = csv.writer(csvutf8, dialect='excel') # 准备读取csv文件
+            with codecs.open(fn, "r", encoding="gbk") as csvfile: # 以gbk解码文件
                 csvreader = csv.reader(csvfile)
-                print("csvreader type:", type(csvreader))
-                i = 0
                 for row in csvreader:
-                    i = i + 1
-                    # print("row type:",type(row[0]))
-                    # print("row 1:",row[0],row[0].encode("utf-8"))
-                    # print(i, ":", "-".join(row))
-                    # print([x.encode("utf-8") for x in row])
                     csvutf8writer.writerow(row)
-
-                    # print(i,":","-".join(row))
     if newfile:
-        print("return!!")
         return newfile
 
 
@@ -125,49 +113,13 @@ def bjdata(request):
 
     for filename in os.listdir(zippath):  # 遍历目标目录下所有文件和文件夹
         fn = os.path.join(zippath, filename)
-        utf8file = toutf8(fn)
+        utf8file = toutf8(fn)  # 转化当前文件
         if utf8file:
             ul["utf8file"][utf8file.split('.')[0].split(r'/')[-1]] = utf8file
-        '''
-        if os.path.isfile(fn) and fn.endswith('.zip'):  # 判断是否为压缩文件
-            unzipfiles = zipfile.ZipFile(fn, 'r')  # 创建zipfile对象
-            for unzipfile in unzipfiles.namelist():  # 获取压缩文件中所有文件
-                print("Unzipfile", unzipfile)
-                unzipfiles.extract(unzipfile, zippath)  # 从压缩文件中解压某个文件
-        
-        newfile = ""
-        if os.path.isfile(fn) and fn.endswith('.csv') and "utf8" not in fn:
-            newfile = os.path.join(zippath, fn.split(r'.')[0]+"utf8.csv")
-            fncharset = chardet.detect(open(fn, "rb").read()) # 检测文件编码方式
-            print("Open file:{0} Charset:{1}".format(filename, fncharset))
-            print("New file:", newfile)
-            with open(newfile, "wb") as csvutf8: # w模式会把已存内容全部擦掉
-                csvutf8.write(codecs.BOM_UTF8) # 开头写入BOM防止win系统乱码
 
-            with open(newfile, "a") as csvutf8:
-
-                csvutf8writer = csv.writer(csvutf8, dialect='excel')
-                with codecs.open(fn, "r", encoding="gbk") as csvfile:
-                    csvreader = csv.reader(csvfile)
-                    print("csvreader type:", type(csvreader))
-                    i = 0
-                    for row in csvreader:
-                        i = i+1
-                        #print("row type:",type(row[0]))
-                        #print("row 1:",row[0],row[0].encode("utf-8"))
-                        #print(i, ":", "-".join(row))
-                        #print([x.encode("utf-8") for x in row])
-                        csvutf8writer.writerow(row)
-                        if(i>20):
-                            break
-                        #print(i,":","-".join(row))
-        '''
-    print(ul["utf8file"])
-    # filelist = [os.path.join(zippath, filename) for filename in os.listdir(zippath)]
-    # mergexl([fn for fn in filelist if os.path.isfile(fn)])
     wb = Workbook()
     for filename, filepath in ul["utf8file"].items():
-        ws = wb.create_sheet(filename)
+        ws = wb.create_sheet(filename) # 新建sheet
         mergexl(filepath, ws)
     wb.save(zippath+"/merge.xlsx")
     print("SHEET NAMES:", wb.sheetnames)

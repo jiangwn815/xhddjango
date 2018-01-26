@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'mainpages'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.index, name='index'), # name主要用于模板引用视图函数
     url(r'^register$', views.register, name='register'),
     url(r'^sms$', views.sms, name='sms'),
     url(r'^crawler$', views.crawler, name='crawler'),
