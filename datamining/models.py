@@ -1,9 +1,9 @@
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-    mobile_no = models.CharField(max_length=11)
-    user_no = models.CharField(max_length=12, blank=True, null=True)
+class Userinfo(models.Model):
+    user_no = models.CharField(max_length=12, primary_key=True)
+    mobile_no = models.CharField(max_length=12)
     in_time = models.CharField(max_length=8, blank=True, null=True)
     out_time = models.CharField(max_length=8, blank=True, null=True)
     out_type = models.CharField(max_length=12, blank=True, null=True)

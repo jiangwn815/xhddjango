@@ -1,14 +1,35 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render
+from django.template import loader
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import os
 import copy
 import csv,chardet,codecs
-from .models import User
+from .models import Userinfo
 from openpyxl import Workbook, load_workbook
 
 
 def index(request):
     return render(request, 'datacleaning/index.html')
+
+
+def userlist(request):
+    users = Userinfo.objects.order_by("user_no")[:100]
+    template = loader.get_template("datacleaning/user.html")
+    context = {
+        "users": users
+    }
+    return HttpResponse(template.render(context, request))
+
+
+def showuser(request,userno):
+    template = loader.get_template("datacleaning/userinfo.html")
+    user = get_object_or_404(Userinfo, user_no=userno)
+    context = {
+        "user": user
+    }
+    print("Context", context)
+    print("user", user.mobile_no)
+    return HttpResponse(template.render(context, request))
 
 
 # 打开某个csv文件并写入传入的sheet
@@ -68,39 +89,39 @@ def dealxlsx(request):
                      "seller_channel_sixth": "用户发展六级部门"
                      }
     fpath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码/merge.xlsx'
-    print(fpath)
     wb = load_workbook(fpath)
     for sheet_name in wb.sheetnames:
         if sheet_name != "Sheet":
             print(sheet_name)
             ws = wb[sheet_name]
-            users={}
-            for cell in ws[1]:
+            # 利用表头确定每列数据对应的字段
+            users = {}
+            for cell in ws[1]:  # 提取表的第一行
                 for key, field in copy.deepcopy(field_mapping).items():
                     if cell.value.endswith(field):
                         users[key] = cell.col_idx
-
-            #print(field_mapping)
+            # 写入每行数据
             for row in ws.iter_rows(min_row=2):
+                print("ROW", row)
+                print("ROW 1", row[1].value)
+                ui = {}  # 存储单行字段-值信息
                 for cell in row:
                     for key, idx in users.items():
                         if cell.col_idx == idx:
-                            users[key] = cell.value
-                User.objects.create(**users)
-                # for cell in row:
-                    # pass
+                            ui[key] = cell.value
+                Userinfo.objects.get_or_create(**ui)
 
     return JsonResponse(ul)
 
 
-# 解压某目录下所有压缩文件
+# 汇总某目录下所有压缩文件
 def bjdata(request):
-    ul = {"utf8file":{}}
+    ul = {"utf8file": {}}
     zippath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码'
 
     for filename in os.listdir(zippath):  # 遍历目标目录下所有文件和文件夹
         fn = os.path.join(zippath, filename)
-        utf8file = toutf8(fn)  # 转化当前文件
+        utf8file = toutf8(fn)  # 转化当前文件到utf8格式
         if utf8file:
             ul["utf8file"][utf8file.split('.')[0].split(r'/')[-1]] = utf8file
 
