@@ -28,7 +28,6 @@
           </li>
         </ul>
     </div>
-
 </header>
 <div class="container-fluid" id="main-body">
     <div class="row">
@@ -42,13 +41,10 @@
             </ul>
         </nav>
         <main class="col-10" id="main2">
-
             {% if users %}
                 <div class="list-group">
                 {% for user in users %}
-
-                    <a  class="list-group-item list-group-item-action" href=/datamining/{{ user.user_no }}/user/>{{ user.mobile_no }}</a>
-                    <a  class="list-group-item list-group-item-action" href="{% url 'datamining:showuser' user.user_no|int %}">{{ user.mobile_no }}</a>
+                    <a  class="list-group-item list-group-item-action" href="{% url 'datamining:showuser' user.user_no %}">{{ user.mobile_no }}</a>
                 {% endfor %}
                 </div>
             {% else %}

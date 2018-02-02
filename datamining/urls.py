@@ -8,5 +8,5 @@ urlpatterns = [
     path("bjdata/", views.bjdata, name='bjdata'),
     path("dealxlsx/", views.dealxlsx, name='dealxlsx'),
     path("userlist/", views.userlist, name='userlist'),
-    path('<int:userno>/', views.showuser, name='showuser')
+    path('user/<int:userno>/', views.showuser, name='showuser')
 ]

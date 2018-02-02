@@ -13,7 +13,7 @@ def index(request):
 
 
 def userlist(request):
-    users = Userinfo.objects.order_by("user_no")[:100]
+    users = Userinfo.objects.all()[:100]
     template = loader.get_template("datacleaning/user.html")
     context = {
         "users": users
