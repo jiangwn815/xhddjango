@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import os
@@ -19,6 +20,15 @@ def userlist(request):
         "users": users
     }
     return HttpResponse(template.render(context, request))
+
+
+def userlist_paginator(request):
+    user_list = Userinfo.objects.all()
+    paginator = Paginator(user_list, 15)
+    page = request.GET.get('page')
+    users = paginator.get_page(page)
+    return render(request, 'datacleaning/userpaginator.html', {'contacts': users})
+
 
 
 def showuser(request,userno):

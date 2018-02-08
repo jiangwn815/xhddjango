@@ -8,5 +8,6 @@ urlpatterns = [
     path("bjdata/", views.bjdata, name='bjdata'),
     path("dealxlsx/", views.dealxlsx, name='dealxlsx'),
     path("userlist/", views.userlist, name='userlist'),
+    path("userlist_paginator/", views.userlist_paginator, name='userlist_paginator'),
     path('user/<int:userno>/', views.showuser, name='showuser')
 ]
