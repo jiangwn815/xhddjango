@@ -17,7 +17,7 @@
 <header class="fixed-top">
     <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
         <a class="navbar-brand" href="#">
-            <img src="{% static 'mainpages/img/headerlogo.png' %}" width="140rem">
+            <img src="{% static 'datacleaning/img/headerlogo.png' %}" width="140rem">
         </a>
         <ul class="nav">
           <li class="nav-item">
@@ -42,20 +42,15 @@
             </ul>
         </nav>
         <main class="col-10" id="main">
-            <div class="form-group row">
-            <input type="text" class="form-control" id="picNumber" name="picNumber" placeholder="请输入图片编码">
-            </div>
-            <div class="form-group row">
-            <button name="actionBtn" class="btn btn-primary btn-block" id="actionBtn" type="button">开始下载</button>
-            </div>
-            <div class="form-group row">
-            <button name="zipBtn" class="btn btn-primary btn-block" id="zipBtn" type="button">开始解压缩</button>
-            </div>
-            <div class="form-group row">
-            <button name="dealXlsx" class="btn btn-primary btn-block" id="dealXlsx" type="button">开始处理文件</button>
-            </div>
-            <div class="form-group row">
-            <button name="collectxlsBtn" class="btn btn-primary btn-block" id="collectxlsBtn" type="button">开始汇总XLS文件</button>
+            <div class="card" style="width: 18rem;">
+              <div class="card-header">
+                用户编号：{{ user.user_no }}
+              </div>
+              <ul class="list-group list-group-flush">
+                  <li class="list-group-item">用户姓名：{{ user.username }}</li>
+                  <li class="list-group-item">手机号码：{{ user.mobile_no }}</li>
+                  <li class="list-group-item">月均总账：{{ zz_avg }}</li>
+              </ul>
             </div>
         </main>
 
@@ -65,7 +60,7 @@
     <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
 </footer>
 <script src="{% static 'datacleaning/js/jquery-3.1.1.min.js' %}"></script>
-<script src="{% static 'datacleaning/js/poper.min.js' %}"></script>
+<script src="{% static 'datacleaning/js/tether.min.js' %}"></script>
 <script src="{% static 'datacleaning/js/bootstrap.js' %}"></script>
 <script src="{% static 'datacleaning/js/datacleaning.js' %}" charset="UTF-8"></script>
 </body>

@@ -123,3 +123,7 @@ a.register-btn:hover{
     background-color: #40d0f0 !important;
     border-color: #40d0f0 ;
 }
+.form-row{
+    margin-top: 0.2rem;
+    margin-bottom: 0.3rem;
+}

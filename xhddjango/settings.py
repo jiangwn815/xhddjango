@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'xhddjango.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_test',
+        'NAME': 'django_test5',
         'USER': 'root',
         'PASSWORD': 'mypassword',
         'HOST': '127.0.0.1',

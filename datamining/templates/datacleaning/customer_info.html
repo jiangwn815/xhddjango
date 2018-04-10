@@ -42,15 +42,29 @@
             </ul>
         </nav>
         <main class="col-10" id="main">
-        <p>User infor.</p>
+            <div class="card" style="width: 18rem;">
+              <div class="card-header">
+                {% for cn in customer_names %}{{ cn }}{% endfor %}
+              </div>
+              <ul class="list-group list-group-flush">
+                  {% for un in user_nos %}
+                <li class="list-group-item"><a href="{% url 'datamining:showuser' un %}">{{ un }}</a></li>
+                  {% endfor %}
+
+              </ul>
+            </div>
+        <p>用户信息：</p>
 
             {% if user %}
                 <div class="list-group">
-                <li  class="list-group-item list-group-item-action">{{ user.mobile_no }}</li>
-                {% for key,value in user.items %}
-                    <li  class="list-group-item list-group-item-action">{{ key }}{{ value }}</li>
-                {% endfor %}
-                </div>
+                <li  class="list-group-item list-group-item-action">客户编码：{{ user.customer_id }}</li>
+                <li  class="list-group-item list-group-item-action">用户号码：{{ user.mobile_no }}</li>
+                <li  class="list-group-item list-group-item-action">用户编号：{{ user.user_no }}</li>
+                <li  class="list-group-item list-group-item-action">近六个月账单收入{{ bill }}</li>
+                <li  class="list-group-item list-group-item-action">{{ user.user_no }}</li>
+                {% for key,value in bill.items %}
+                    <li  class="list-group-item list-group-item-action">{{ key }}{{ value }}d</li>
+                {% endfor %}    </div>
             {% else %}
                 <p>No User are available.</p>
             {% endif %}

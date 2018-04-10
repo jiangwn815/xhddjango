@@ -1,10 +1,12 @@
 from django.contrib import admin
-
 # Register your models here.
-from .models import Userinfo
+from .models import Userinfo, TeleUser, Bill, ResourceUsage
 
 
 class UserinfoAdmin(admin.ModelAdmin):
+    list_display = ('user_no', 'mobile_no', 'seller_channel_third', 'charge_plan')
+    list_filter = ['charge_plan']
+    search_fields = ['mobile_no']
     fieldsets = [
         (None, {'fields': ['user_no']}),
         ('关键信息', {'fields': ['mobile_no', 'in_time', 'user_state']}),
@@ -15,3 +17,6 @@ class UserinfoAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Userinfo, UserinfoAdmin)
+admin.site.register(TeleUser)
+admin.site.register(Bill)
+admin.site.register(ResourceUsage)

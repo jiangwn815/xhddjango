@@ -41,6 +41,7 @@ def register(request):
 def crawler(request):
     return render(request, 'mainpages/crawler.html')
 
+
 # 下载文件（文件地址，文件名字，目标地址，文件大小阈值）
 def downloadpic(picurl, picname, target_url, piclimit=100):
     headers = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like "

@@ -5,7 +5,7 @@ $(function(){
     $('#actionBtn').click(function(){
         console.log("click in 15");
         var getdata={};
-        getdata["picnumber"]=$('#picNumber').val();
+        getdata["searchText"]=$('#searchText').val();
         $.getJSON('crawlerpic',getdata, function(re){
             $.each(re,function(key,value){
 

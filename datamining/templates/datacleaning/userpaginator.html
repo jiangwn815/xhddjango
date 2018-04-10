@@ -41,17 +41,40 @@
             </ul>
         </nav>
         <main class="col-10" id="main2">
+        <form id="searchform" method="get" action="{% url 'datamining:userlist_paginator'%}" >
+            <div class="form-row">
+                <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text" id="basic-addon1">@</span></div>
+                        <input type="text" class="form-control" id="searchText" name="searchText"  aria-describedby="basic-addon1" placeholder="请输入资费名称">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchChannelSix" name="searchChannelSix"  placeholder="请输入发展渠道六级">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="input-group">
+                        <button name="actionBtn" class="btn btn-primary btn-block" id="actionBtn" type="submit">开始查询</button>
+                    </div>
+                </div>
+            </div>
+        </form>
             {% for contact in contacts %}
                 {# Each "contact" is a Contact model object. #}
-                {{ contact.user_no|upper }}<br />
-                ...
-            {% endfor %}
+                <a  class="list-group-item list-group-item-action" href="{% url 'datamining:showcustomer' contact.customer_id %}">
+                    {{ contact.customer_id|upper }}|{{ contact.mobile_no|upper }}</a>
 
+            {% endfor %}
+            <div>总用户数：{{ sumno }}</div>
             <div class="pagination">
                 <span class="step-links">
                     {% if contacts.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ contacts.previous_page_number }}">previous</a>
+                        <a href="?page=1">&laquo; 第一页</a>
+                        <a href="?page={{ contacts.previous_page_number }}">前一页</a>
                     {% endif %}
 
                     <span class="current">
@@ -59,8 +82,8 @@
                     </span>
 
                     {% if contacts.has_next %}
-                        <a href="?page={{ contacts.next_page_number }}">next</a>
-                        <a href="?page={{ contacts.paginator.num_pages }}">last &raquo;</a>
+                        <a href="?page={{ contacts.next_page_number }}">下一页</a>
+                        <a href="?page={{ contacts.paginator.num_pages }}">最后 &raquo;</a>
                     {% endif %}
                 </span>
             </div>
@@ -74,6 +97,6 @@
 <script src="{% static 'datacleaning/js/jquery-3.1.1.min.js' %}"></script>
 <script src="{% static 'datacleaning/js/tether.min.js' %}"></script>
 <script src="{% static 'datacleaning/js/bootstrap.js' %}"></script>
-<script src="{% static 'datacleaning/js/datacleaning.js' %}" charset="UTF-8"></script>
+<script src="{% static 'datacleaning/js/userpaginator.js' %}" charset="UTF-8"></script>
 </body>
 </html>

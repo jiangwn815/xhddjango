@@ -2,11 +2,16 @@ from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.db.models import Avg
+from django.db.models import Count
 import os
 import copy
 import csv,chardet,codecs
-from .models import Userinfo
+import xlrd
+from .models import Userinfo,TeleUser, Bill, ResourceUsage
 from openpyxl import Workbook, load_workbook
+from datetime import datetime, date, timedelta
+from time import time
 
 
 def index(request):
@@ -23,27 +28,66 @@ def userlist(request):
 
 
 def userlist_paginator(request):
-    user_list = Userinfo.objects.all()
+    st = request.GET.get('searchText', default="")
+    c6 = request.GET.get('searchChannelSix', default="")
+    user_list = TeleUser.objects.all()
+    if st:
+        user_list = user_list.filter(charge_plan__contains=st)
+    if c6:
+        user_list = user_list.filter(seller_channel_sixth__contains=c6)
+    sumno = user_list.count()
     paginator = Paginator(user_list, 15)
     page = request.GET.get('page')
     users = paginator.get_page(page)
-    return render(request, 'datacleaning/userpaginator.html', {'contacts': users})
+    return render(request, 'datacleaning/userpaginator.html', {'contacts': users,
+                                                               'sumno':sumno})
 
+def showcustomer(request, customer_id):
+    template = loader.get_template("datacleaning/customer_info.html")
+    customer_name_list = []
+    user_no_list = []
 
+    for customer in TeleUser.objects.filter(customer_id=customer_id):
+        if customer.username:
 
-def showuser(request,userno):
-    template = loader.get_template("datacleaning/userinfo.html")
-    user = get_object_or_404(Userinfo, user_no=userno)
+            customer_name_list.append(customer.username)
+            if customer.user_no not in user_no_list:
+                user_no_list.append(customer.user_no)
+    print(customer_name_list)
+    print(user_no_list)
+    user_count = TeleUser.objects.filter(customer_id=customer_id).annotate(no_user=Count('user_no'))
+    print(user_count[0].no_user)
+    zz_income = Bill.objects.filter(customer_id=customer_id).aggregate(Avg('zz_income'))
+    ru = ResourceUsage.objects.filter(customer_id=customer_id).last()
     context = {
-        "user": user
+        "customer_names": set(customer_name_list),
+        "user_nos": set(user_no_list),
+        "bill": zz_income,
+        "ru": ru
     }
     print("Context", context)
-    print("user", user.mobile_no)
+    return HttpResponse(template.render(context, request))
+
+
+def showuser(request, user_no):
+    template = loader.get_template("datacleaning/user_info.html")
+    user_count = TeleUser.objects.filter(user_no=user_no).annotate(no_user=Count('user_no'))
+    print(user_count[0].no_user)
+    zz_avg = Bill.objects.filter(user_no=user_no).aggregate(Avg('zz_income'))
+    ru = ResourceUsage.objects.filter(user_no=user_no).last()
+    user = TeleUser.objects.get(user_no=user_no)
+    context = {
+        "zz_avg": zz_avg,
+        "ru": ru,
+        'user': user,
+        'zz_avg': zz_avg['zz_income__avg']
+    }
+    print("Context", context)
     return HttpResponse(template.render(context, request))
 
 
 # 打开某个csv文件并写入传入的sheet
-def mergexl(file,ws):
+def mergexl(file, ws):
     with open(file) as csvfile:
         csvreader = csv.reader(csvfile)
         for x, row in enumerate(csvreader):
@@ -78,8 +122,11 @@ def toutf8(fn):
 
 
 def dealxlsx(request):
+    print("开始处理文件......")
     ul = {}
     field_mapping = {"mobile_no": "服务号码",
+                     "customer_id": "客户编号",
+                     "username": "客户名称",
                      "user_no": "用户编号",
                      "in_time": "入网时间",
                      "out_time": "离网时间",
@@ -98,29 +145,136 @@ def dealxlsx(request):
                      "seller_channel_fifth": "用户发展五级部门",
                      "seller_channel_sixth": "用户发展六级部门"
                      }
-    fpath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码/merge.xlsx'
+    field_mapping = {
+                     "customer_id": "客户编号",
+                     "username": "客户名称",
+                     "user_no": "用户编号",
+                     "mobile_no": "服务号码"
+                     }
+    field_mapping = {
+        "customer_id": "客户编号",
+        "username": "客户名称",
+        "user_no": "用户编号",
+        "mobile_no": "服务号码"
+    }
+    field_mapping = {
+        "customer_id": "客户编号",
+        "user_no": "用户编号",
+        "zz_income": {
+            "zz_income_last0": "本月实际应收(总账)(元)",
+            "zz_income_last1": "最近第1月收入(总账)(元)",
+            "zz_income_last2": "最近第2月收入(总账)(元)",
+            "zz_income_last3": "最近第3月收入(总账)(元)",
+            "zz_income_last4": "最近第4月收入(总账)(元)",
+            "zz_income_last5": "最近第5月收入(总账)(元)"
+        },
+        "call_times": {
+            "call_times_last0": "本月基本计费时长(分钟)",
+            "call_times_last1": "最近第1月计费时长(分钟)",
+            "call_times_last2": "最近第2月计费时长(分钟)",
+            "call_times_last3": "最近第3月计费时长(分钟)",
+            "call_times_last4": "最近第4月计费时长(分钟)",
+            "call_times_last5": "最近第5月计费时长(分钟)"
+        },
+        "data_usage": {
+            "data_usage_last0": "本月无线宽带总流量(KB)",
+            "data_usage_last1": "最近第1月无线宽带流量(KB)",
+            "data_usage_last2": "最近第2月无线宽带流量(KB)",
+            "data_usage_last3": "最近第3月无线宽带流量(KB)",
+            "data_usage_last4": "最近第4月无线宽带流量(KB)",
+            "data_usage_last5": "最近第5月无线宽带流量(KB)"
+        },
+        "text_usage": {
+            "text_usage_last0": "本月短信条数(条)",
+            "text_usage_last1": "最近第1月短信条数(条)",
+            "text_usage_last2": "最近第2月短信条数(条)",
+            "text_usage_last3": "最近第3月短信条数(条)",
+            "text_usage_last4": "最近第4月短信条数(条)",
+            "text_usage_last5": "最近第5月短信条数(条)"
+        }
+    }
+
+    fpath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码/外呼用户分析2017入网-201802.xlsx'
+    start = time()
     wb = load_workbook(fpath)
+    stop = time()
+    print("文件载入时间：", stop-start)
     for sheet_name in wb.sheetnames:
         if sheet_name != "Sheet":
-            print(sheet_name)
             ws = wb[sheet_name]
             # 利用表头确定每列数据对应的字段
+            multi_rows = False
             users = {}
+            start = time()
             for cell in ws[1]:  # 提取表的第一行
-                for key, field in copy.deepcopy(field_mapping).items():
-                    if cell.value.endswith(field):
-                        users[key] = cell.col_idx
-            # 写入每行数据
+                print("开始遍历文件头......", cell.value)
+                for key, field in field_mapping.items():
+                    if isinstance(field, str):
+                        if cell.value.endswith(field):
+                            users[key] = cell.col_idx
+                    elif isinstance(field, dict):
+                        multi_rows = True
+                        for k, v in field.items():
+                            if cell.value.endswith(v):
+                                if key in users:
+                                    users[key].update({k: cell.col_idx})
+                                else:
+                                    users.update({key: {k: cell.col_idx}})
+            stop = time()
+            print("文件头匹配时间：", stop - start)
+            start = time()
             for row in ws.iter_rows(min_row=2):
-                print("ROW", row)
-                print("ROW 1", row[1].value)
                 ui = {}  # 存储单行字段-值信息
                 for cell in row:
                     for key, idx in users.items():
-                        if cell.col_idx == idx:
-                            ui[key] = cell.value
-                Userinfo.objects.get_or_create(**ui)
 
+                        if isinstance(idx, int):
+                            if cell.col_idx == idx:
+                                ui[key] = cell.value
+                        elif isinstance(idx, dict):
+
+                            for k, v in idx.items():
+                                if cell.col_idx == v:
+                                    if key in ui:
+                                        ui[key].update({k: cell.value})
+                                    else:
+                                        ui.update({key: {k: cell.value}})
+                if multi_rows:
+                    uidb = {}
+                    item_num = 6
+                    current_month = 2
+
+                    for i in range(0, item_num):
+                        if current_month-i > 0:
+                            account_date = date(2018, current_month-i, 1)
+                        else:
+                            account_date = date(2017, current_month-i+12, 1)
+                        for key, field in ui.items():
+                            if isinstance(field, dict):
+                                uidb[key] = field[key+"_last"+str(i)]
+                            elif isinstance(field, (str, int)):
+                                uidb[key] = field
+                        uidb['account_date'] = account_date
+
+                        bill_db = copy.deepcopy(uidb)
+                        ru_db = copy.deepcopy(uidb)
+                        bill_db.pop('call_times')
+                        bill_db.pop('data_usage')
+                        bill_db.pop('text_usage')
+                        ru_db.pop('zz_income')
+                        print('bill value:', bill_db)
+
+                        Bill.objects.update_or_create(
+                            defaults=bill_db,
+                            user_no=bill_db['user_no'], account_date=bill_db['account_date'])
+                        ResourceUsage.objects.update_or_create(
+                            defaults=ru_db,
+                            user_no=bill_db['user_no'], account_date=bill_db['account_date'])
+
+                else:
+                    TeleUser.objects.update_or_create(defaults={'user_no': ui['user_no']}, **ui)
+            stop = time()
+            print("4行数据处理时间：", stop - start)
     return JsonResponse(ul)
 
 
@@ -143,4 +297,41 @@ def bjdata(request):
     wb.save(zippath+"/merge.xlsx")
     print("SHEET NAMES:", wb.sheetnames)
 
+    return JsonResponse(ul)
+
+
+def cvt_xls_to_xlsx(src_file_path, dst_file_path):
+    book_xls = xlrd.open_workbook(src_file_path)
+    book_xlsx = Workbook()
+
+    sheet_names = book_xls.sheet_names()
+    for sheet_index in range(0,len(sheet_names)):
+        sheet_xls = book_xls.sheet_by_name(sheet_names[sheet_index])
+        if sheet_index == 0:
+            sheet_xlsx = book_xlsx.active()
+            sheet_xlsx.title = sheet_names[sheet_index]
+        else:
+            sheet_xlsx = book_xlsx.create_sheet(title=sheet_names[sheet_index])
+        for row in range(0, sheet_xls.nrows):
+            for col in range(0, sheet_xls.ncols):
+                sheet_xlsx.cell(row = row+1 , column = col+1).value = sheet_xls.cell_value(row, col)
+
+    book_xlsx.save(dst_file_path)
+
+
+def collectxls(request):
+    ul = {}
+    path = '/Users/jwn/Desktop/工作文件/外呼/佣金建档/'
+    xls = [file for file in os.listdir(path) if file.endswith('.xls')]
+    wb = Workbook()
+    for filename in xls:  # 遍历目标目录下所有文件和文件夹
+        fn = os.path.join(path, filename)
+        ws = wb.create_sheet(filename.split('.')[0])
+        print(filename.split('.')[0])
+        ws_copy = xlrd.open_workbook(fn).sheet_by_index(0)
+        for row in range(0, ws_copy.nrows):
+            for col in range(0, ws_copy.ncols):
+                ws.cell(row=row+1, column=col+1, value=ws_copy.cell_value(row, col))
+    wb.save(path+'output.xls')
+    ul["msg"] = "success!"
     return JsonResponse(ul)
