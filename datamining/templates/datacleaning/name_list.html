@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="icon" sizes="200x200" href="{% static 'datacleaning/favicon.ico' %}" />
+    <link rel="shortcut icon" href="{% static 'datacleaning/favicon.ico' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'datacleaning/css/style2.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'datacleaning/css/bootstrap.css' %}" />
+
+
+    <title>有度有数</title>
+</head>
+<body>
+<header class="fixed-top">
+    <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'datacleaning/img/headerlogo.png' %}" width="140rem">
+        </a>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link register-btn" href="#">登&nbsp&nbsp录</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link register-btn"  href="{% url 'mainpages:register' %}">注&nbsp&nbsp册</a>
+          </li>
+        </ul>
+    </div>
+</header>
+<div class="container-fluid" id="main-body">
+    <div class="row">
+        <nav class="col-2 " id="nav">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link active" href="#">首&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp页</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">个人中心</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">产品介绍</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
+                <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
+            </ul>
+        </nav>
+        <main class="col-10" id="main2">
+        <form id="searchform" method="get" action="{% url 'datamining:showname'%}" >
+            <div class="form-row">
+                <div class="col">
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text" id="basic-addon1">@</span></div>
+                        <input type="text" class="form-control" id="searchText" name="searchText"  aria-describedby="basic-addon1" placeholder="请输入资费名称">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchChannelSix" name="searchChannelSix"  placeholder="请输入发展渠道六级">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchName" name="searchName"  placeholder="请输入姓名">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="input-group">
+                        <button name="actionBtn" class="btn btn-primary btn-block" id="actionBtn" type="submit">开始查询</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+            {% for contact in contacts %}
+                {# Each "contact" is a Contact model object. #}
+                <a  class="list-group-item list-group-item-action">
+                    {{ contact.username }}</a>
+
+            {% endfor %}
+
+
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                  {% if contacts.has_previous %}
+                      <li class="page-item"> <a class="page-link" href="?page=1">&laquo; 第一页</a></li>
+                      <li class="page-item"><a class="page-link"  href="?page={{ contacts.previous_page_number }}">前一页</a></li>
+
+                  {% endif %}
+                  <li class="page-item">
+                      <a class="page-link">第 {{ contacts.number }} 页/总计{{ contacts.paginator.num_pages }}页</a>
+                  </li>
+                  {% if contacts.has_next %}
+                    <li class="page-item"><a class="page-link"  href="?pagelist={{ contacts.next_page_number }}">下一页</a></li>
+                    <li class="page-item"><a class="page-link"  href="?pagelist={{ contacts.paginator.num_pages }}">最后 &raquo;</a></li>
+                  {% endif %}
+              <li class="page-item"><a class="page-link"  >总用户数：{{ sumno }}</a>
+
+                  </li>
+              </ul>
+            </nav>
+
+        </main>
+
+    </div>
+</div>
+<footer id="footer">
+    <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
+</footer>
+<script src="{% static 'datacleaning/js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'datacleaning/js/tether.min.js' %}"></script>
+<script src="{% static 'datacleaning/js/bootstrap.js' %}"></script>
+<script src="{% static 'datacleaning/js/userpaginator.js' %}" charset="UTF-8"></script>
+</body>
+</html>

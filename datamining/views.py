@@ -40,16 +40,33 @@ def userlist_paginator(request):
     page = request.GET.get('page')
     users = paginator.get_page(page)
     return render(request, 'datacleaning/userpaginator.html', {'contacts': users,
-                                                               'sumno':sumno})
+                                                               'sumno': sumno})
+
+
+def showname(request):
+    st = request.GET.get('searchText', default="")
+    c6 = request.GET.get('searchChannelSix', default="")
+    sn = request.GET.get('searchName', default="")
+    user_list = TeleUser.objects.order_by('username').values('username').distinct()
+    if st:
+        user_list = user_list.filter(charge_plan__contains=st)
+    if c6:
+        user_list = user_list.filter(seller_channel_sixth__contains=c6)
+    if sn:
+        user_list = user_list.filter(username__contains=sn)
+    sumno = user_list.count()
+    paginator = Paginator(user_list, 15)
+    page = request.GET.get('pagelist')
+    users = paginator.get_page(page)
+    return render(request, 'datacleaning/name_list.html', {'contacts': users, 'sumno': sumno})
+
 
 def showcustomer(request, customer_id):
     template = loader.get_template("datacleaning/customer_info.html")
     customer_name_list = []
     user_no_list = []
-
     for customer in TeleUser.objects.filter(customer_id=customer_id):
         if customer.username:
-
             customer_name_list.append(customer.username)
             if customer.user_no not in user_no_list:
                 user_no_list.append(customer.user_no)
