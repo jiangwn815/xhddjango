@@ -1,6 +1,6 @@
 from django.contrib import admin
 # Register your models here.
-from .models import Userinfo, TeleUser, Bill, ResourceUsage
+from .models import Productinfo, TeleUser, Bill, ResourceUsage
 
 
 class UserinfoAdmin(admin.ModelAdmin):
@@ -16,7 +16,7 @@ class UserinfoAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Userinfo, UserinfoAdmin)
+admin.site.register(Productinfo, UserinfoAdmin)
 admin.site.register(TeleUser)
 admin.site.register(Bill)
 admin.site.register(ResourceUsage)

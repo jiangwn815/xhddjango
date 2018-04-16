@@ -8,7 +8,7 @@ import os
 import copy
 import csv,chardet,codecs
 import xlrd
-from .models import Userinfo,TeleUser, Bill, ResourceUsage
+from .models import Productinfo,TeleUser, Bill, ResourceUsage
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
 from time import time
@@ -19,7 +19,7 @@ def index(request):
 
 
 def userlist(request):
-    users = Userinfo.objects.all()[:100]
+    users = Productinfo.objects.all()[:100]
     template = loader.get_template("datacleaning/user.html")
     context = {
         "users": users
@@ -59,6 +59,24 @@ def showname(request):
     page = request.GET.get('pagelist')
     users = paginator.get_page(page)
     return render(request, 'datacleaning/name_list.html', {'contacts': users, 'sumno': sumno})
+
+
+def product_info_list(request):
+    st = request.GET.get('searchText', default="")
+    c6 = request.GET.get('searchChannelSix', default="")
+    sn = request.GET.get('searchName', default="")
+    productlist = Productinfo.objects.order_by('user_no').all()
+    if st:
+        productlist = productlist.filter(charge_plan__contains=st)
+    if c6:
+        productlist = productlist.filter(seller_channel_sixth__contains=c6)
+    if sn:
+        productlist = productlist.filter(username__contains=sn)
+    product_no = productlist.count()
+    paginator = Paginator(productlist, 15)
+    page = request.GET.get('pagelist')
+    users = paginator.get_page(page)
+    return render(request, 'datacleaning/product_info_list.html', {'productlist': productlist, 'product_no': product_no})
 
 
 def showcustomer(request, customer_id):
@@ -138,30 +156,29 @@ def toutf8(fn):
         return newfile
 
 
+def field_location_mapping(first_row, field_mapping):
+    users = {}
+    for cell in first_row:  # 提取表的第一行
+        print("开始遍历文件头......", cell.value)
+        for key, field in field_mapping.items():
+            if isinstance(field, str):
+                if cell.value.endswith(field):
+                    users[key] = cell.col_idx
+            elif isinstance(field, dict):
+                multi_rows = True
+                for k, v in field.items():
+                    if cell.value.endswith(v):
+                        if key in users:
+                            users[key].update({k: cell.col_idx})
+                        else:
+                            users.update({key: {k: cell.col_idx}})
+    return users
+
+
 def dealxlsx(request):
     print("开始处理文件......")
     ul = {}
-    field_mapping = {"mobile_no": "服务号码",
-                     "customer_id": "客户编号",
-                     "username": "客户名称",
-                     "user_no": "用户编号",
-                     "in_time": "入网时间",
-                     "out_time": "离网时间",
-                     "out_type": "离网类型",
-                     "user_state": "用户状态",
-                     "user_state_starttime": "当前状态开始时间",
-                     "user_online_time":"用户在网时间（月）",
-                     "double_seller": "双计人",
-                     "brokerage_channel": "合作渠道",
-                     "subscribe_plan": "租机计划",
-                     "charge_plan": "资费名称",
-                     "mainproduct_second": "主产品细类二级",
-                     "singleproduct_sub": "单产品销售细类",
-                     "seller_name": "用户发展员工",
-                     "seller_channel_third": "用户发展三级部门",
-                     "seller_channel_fifth": "用户发展五级部门",
-                     "seller_channel_sixth": "用户发展六级部门"
-                     }
+
     field_mapping = {
                      "customer_id": "客户编号",
                      "username": "客户名称",
@@ -210,88 +227,90 @@ def dealxlsx(request):
             "text_usage_last5": "最近第5月短信条数(条)"
         }
     }
-
+    field_mapping = {"mobile_no": "服务号码",
+                     "user_no": "用户编号",
+                     "in_time": "入网时间",
+                     "out_time": "离网时间",
+                     "out_type": "离网类型",
+                     "user_state": "用户状态",
+                     "user_state_starttime": "当前状态开始时间",
+                     "user_online_time": "用户在网时间（月）",
+                     "double_seller": "双计人",
+                     "brokerage_channel": "合作渠道",
+                     "subscribe_plan": "租机计划",
+                     "charge_plan": "资费名称",
+                     "mainproduct_second": "主产品细类二级",
+                     "singleproduct_sub": "单产品销售细类",
+                     "seller_name": "用户发展员工",
+                     "seller_channel_third": "用户发展三级部门",
+                     "seller_channel_fifth": "用户发展五级部门",
+                     "seller_channel_sixth": "用户发展六级部门"
+                     }
     fpath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码/外呼用户分析2017入网-201802.xlsx'
     start = time()
     wb = load_workbook(fpath)
     stop = time()
     print("文件载入时间：", stop-start)
+    ul['file_load_time'] = stop-start
     for sheet_name in wb.sheetnames:
-        if sheet_name != "Sheet":
-            ws = wb[sheet_name]
-            # 利用表头确定每列数据对应的字段
-            multi_rows = False
-            users = {}
-            start = time()
-            for cell in ws[1]:  # 提取表的第一行
-                print("开始遍历文件头......", cell.value)
-                for key, field in field_mapping.items():
-                    if isinstance(field, str):
-                        if cell.value.endswith(field):
-                            users[key] = cell.col_idx
-                    elif isinstance(field, dict):
-                        multi_rows = True
-                        for k, v in field.items():
-                            if cell.value.endswith(v):
-                                if key in users:
-                                    users[key].update({k: cell.col_idx})
+        ws = wb[sheet_name]
+        # 利用表头确定每列数据对应的字段
+        multi_rows = False
+        start = time()
+        users = field_location_mapping(ws[1], field_mapping)
+        stop = time()
+        print("文件头匹配时间：", stop - start)
+        ul['file_match_time'] = stop-start
+        start = time()
+        for row in ws.iter_rows(min_row=2):
+            ui = {}  # 存储单行字段-值信息
+            for cell in row:
+                for key, idx in users.items():
+                    if isinstance(idx, int):
+                        if cell.col_idx == idx:
+                            ui[key] = cell.value
+                    elif isinstance(idx, dict):
+                        for k, v in idx.items():
+                            if cell.col_idx == v:
+                                if key in ui:
+                                    ui[key].update({k: cell.value})
                                 else:
-                                    users.update({key: {k: cell.col_idx}})
-            stop = time()
-            print("文件头匹配时间：", stop - start)
-            start = time()
-            for row in ws.iter_rows(min_row=2):
-                ui = {}  # 存储单行字段-值信息
-                for cell in row:
-                    for key, idx in users.items():
+                                    ui.update({key: {k: cell.value}})
 
-                        if isinstance(idx, int):
-                            if cell.col_idx == idx:
-                                ui[key] = cell.value
-                        elif isinstance(idx, dict):
+            if multi_rows:
+                data_row = {}
+                ITEM_NUMBER = 6
+                current_month = 2
+                for i in range(0, ITEM_NUMBER):
+                    if current_month-i > 0:
+                        account_date = date(2018, current_month-i, 1)
+                    else:
+                        account_date = date(2017, current_month-i+12, 1)
+                    for key, field in ui.items():
+                        if isinstance(field, dict):
+                            data_row[key] = field[key+"_last"+str(i)]
+                        elif isinstance(field, (str, int)):
+                            data_row[key] = field
+                    data_row['account_date'] = account_date
+                    bill_db = copy.deepcopy(data_row)
+                    ru_db = copy.deepcopy(data_row)
+                    bill_db.pop('call_times')
+                    bill_db.pop('data_usage')
+                    bill_db.pop('text_usage')
+                    ru_db.pop('zz_income')
+                    print('bill value:', bill_db)
+                    Productinfo.objects.update_or_create(
+                        defaults=bill_db,
+                        user_no=bill_db['user_no'], account_date=bill_db['account_date'])
+                    #ResourceUsage.objects.update_or_create(
+                       # defaults=ru_db,
+                        #user_no=bill_db['user_no'], account_date=bill_db['account_date'])
 
-                            for k, v in idx.items():
-                                if cell.col_idx == v:
-                                    if key in ui:
-                                        ui[key].update({k: cell.value})
-                                    else:
-                                        ui.update({key: {k: cell.value}})
-                if multi_rows:
-                    uidb = {}
-                    item_num = 6
-                    current_month = 2
-
-                    for i in range(0, item_num):
-                        if current_month-i > 0:
-                            account_date = date(2018, current_month-i, 1)
-                        else:
-                            account_date = date(2017, current_month-i+12, 1)
-                        for key, field in ui.items():
-                            if isinstance(field, dict):
-                                uidb[key] = field[key+"_last"+str(i)]
-                            elif isinstance(field, (str, int)):
-                                uidb[key] = field
-                        uidb['account_date'] = account_date
-
-                        bill_db = copy.deepcopy(uidb)
-                        ru_db = copy.deepcopy(uidb)
-                        bill_db.pop('call_times')
-                        bill_db.pop('data_usage')
-                        bill_db.pop('text_usage')
-                        ru_db.pop('zz_income')
-                        print('bill value:', bill_db)
-
-                        Bill.objects.update_or_create(
-                            defaults=bill_db,
-                            user_no=bill_db['user_no'], account_date=bill_db['account_date'])
-                        ResourceUsage.objects.update_or_create(
-                            defaults=ru_db,
-                            user_no=bill_db['user_no'], account_date=bill_db['account_date'])
-
-                else:
-                    TeleUser.objects.update_or_create(defaults={'user_no': ui['user_no']}, **ui)
-            stop = time()
-            print("4行数据处理时间：", stop - start)
+            else:
+                Productinfo.objects.update_or_create(defaults={'user_no': ui['user_no']}, **ui)
+        stop = time()
+        print("数据处理时间：", stop - start)
+        ul['file_process_time'] = stop-start
     return JsonResponse(ul)
 
 

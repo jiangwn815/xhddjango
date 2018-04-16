@@ -3,7 +3,7 @@ import django.utils.timezone as timezone
 from django.db import models
 
 # Create your models here.
-class Userinfo(models.Model):
+class Productinfo(models.Model):
     user_no = models.CharField(max_length=12, primary_key=True)
     mobile_no = models.CharField(max_length=12)
     in_time = models.CharField(max_length=8, blank=True, null=True)
