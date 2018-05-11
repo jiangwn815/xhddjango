@@ -1,4 +1,4 @@
-"""xhddjango URL Configuration
+"""FirstDjangoProject URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from . import views
 
 urlpatterns = [
     url(r'^mainpages/', include('mainpages.urls')),
     url(r'^datamining/', include('datamining.urls')),
+    url(r'^fileprocess/', include('fileprocess.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.index, name='index')
 ]

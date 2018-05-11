@@ -12,6 +12,7 @@ from .models import Productinfo,TeleUser, Bill, ResourceUsage
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
 from time import time
+from django.forms.models import model_to_dict
 
 
 def index(request):
@@ -35,6 +36,7 @@ def userlist_paginator(request):
         user_list = user_list.filter(charge_plan__contains=st)
     if c6:
         user_list = user_list.filter(seller_channel_sixth__contains=c6)
+
     sumno = user_list.count()
     paginator = Paginator(user_list, 15)
     page = request.GET.get('page')
@@ -65,6 +67,10 @@ def product_info_list(request):
     st = request.GET.get('searchText', default="")
     c6 = request.GET.get('searchChannelSix', default="")
     sn = request.GET.get('searchName', default="")
+    pt = request.GET.get('searchProductType', default="")
+    sp = request.GET.get('searchSubscribePlan', default="")
+    cp = request.GET.get('searchChargePlan', default="")
+
     productlist = Productinfo.objects.order_by('user_no').all()
     if st:
         productlist = productlist.filter(charge_plan__contains=st)
@@ -72,11 +78,26 @@ def product_info_list(request):
         productlist = productlist.filter(seller_channel_sixth__contains=c6)
     if sn:
         productlist = productlist.filter(username__contains=sn)
+    if pt:
+        if pt == 'h':
+            productlist = productlist.filter(mainproduct_second__contains="后付费语音")
+        elif pt == 'y':
+            productlist = productlist.filter(mainproduct_second__contains="预付费语音")
+    subscribe_plan = list(productlist.order_by('subscribe_plan').values('subscribe_plan').distinct())
+    subscribe_plan_list = [x['subscribe_plan'].split('(')[0] for x in subscribe_plan]
+    if sp:
+        productlist = productlist.filter(subscribe_plan__contains=sp)
+    charge_plan = list(productlist.order_by('charge_plan').values('charge_plan').distinct())
+    charge_plan_list = [x['charge_plan'].split('(')[0] for x in charge_plan]
+    print(subscribe_plan_list)
     product_no = productlist.count()
     paginator = Paginator(productlist, 15)
     page = request.GET.get('pagelist')
     users = paginator.get_page(page)
-    return render(request, 'datacleaning/product_info_list.html', {'productlist': productlist, 'product_no': product_no})
+    return render(request, 'datacleaning/product_info_list.html', {'productlist': users,
+                                                                   'subscribe_plan': subscribe_plan_list,
+                                                                   'charge_plan': charge_plan_list,
+                                                                   'product_no': product_no})
 
 
 def showcustomer(request, customer_id):

@@ -1,5 +1,5 @@
 """
-WSGI config for xhddjango project.
+WSGI config for FirstDjangoProject project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

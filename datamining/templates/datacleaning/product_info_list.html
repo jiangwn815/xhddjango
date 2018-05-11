@@ -39,7 +39,7 @@
             </ul>
         </nav>
         <main class="col-10" id="main2">
-        <form id="searchform" method="get" action="{% url 'datamining:showname'%}" >
+        <form id="searchform" method="get" action="{% url 'datamining:product_info_list'%}" >
             <div class="form-row">
                 <div class="col">
                     <div class="input-group">
@@ -57,20 +57,72 @@
                         <input type="text" class="form-control" id="searchName" name="searchName"  placeholder="请输入姓名">
                     </div>
                 </div>
+
             </div>
+            <div class="form-row">
+                <div class="col">
+                    <select id="searchProductType" name="searchProductType" class="form-control">
+                        <option value="" selected>产品类型</option>
+                        <option value="h">后付费语音</option>
+                        <option value="y">预付费语音</option>
+                    </select>
+                </div>
+                 {% if subscribe_plan %}
+                    <div class="col">
+                    <select id="searchSubscribePlan" name="searchSubscribePlan" class="form-control">
+                        <option value="" selected>租机计划</option>
+                        {% for sp in subscribe_plan %}
+                            <option value={{ sp }}>{{ sp }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                {% endif %}
+                {% if charge_plan %}
+                    <div class="col">
+                    <select id="searchChargePlan" name="searchChargePlan" class="form-control">
+                        <option value="" selected>套餐名称</option>
+                        {% for cp in charge_plan %}
+                            <option value={{ cp }}>{{ cp }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                {% endif %}
+                </div>
             <div class="form-row">
                 <div class="col">
                     <div class="input-group">
                         <button name="actionBtn" class="btn btn-primary btn-block" id="actionBtn" type="submit">开始查询</button>
                     </div>
                 </div>
+
             </div>
         </form>
-            {% for product_info in productlist %}
+        <table class="table">
+          <thead>
+            <tr>
+
+                <th scope="col">用户编号</th>
+                <th scope="col">用户号码</th>
+                <th scope="col">合约计划</th>
+                <th scope="col">套餐名称</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for product_info in productlist %}
                 {# Each "contact" is a Contact model object. #}
-                <a  class="list-group-item list-group-item-action">
-                    {{ product_info.user_no }}</a>
+              <tr>
+              <th scope="row">
+              <a>{{ product_info.user_no }}</a>
+              </th>
+              <td>{{ product_info.mobile_no }}</td>
+              <td>{{ product_info.subscribe_plan }}</td>
+              <td>{{ product_info.charge_plan }}</td>
+              </tr>
             {% endfor %}
+
+          </tbody>
+        </table>
+
             <nav aria-label="Page navigation example">
               <ul class="pagination">
                   {% if productlist.has_previous %}
