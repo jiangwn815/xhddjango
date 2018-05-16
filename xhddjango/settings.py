@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-
+from .dbconfig import db
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -78,28 +78,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'xhddjango.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_test5',
-        'USER': 'root',
-        'PASSWORD': 'mypassword',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-    },
-    'commission': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'django_commission',
-            'USER': 'root',
-            'PASSWORD': 'mypassword',
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-        }
-}
-
+DATABASES = db()
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
