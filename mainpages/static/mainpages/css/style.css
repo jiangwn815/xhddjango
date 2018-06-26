@@ -4,7 +4,7 @@ body, button, input, select, textarea{
     outline:none;
   }
 header{
-    background-color: rgb(68,68,68);
+
     padding-left: 2rem;
     padding-right: 2rem;
     border-bottom: #2aabd2  0.2rem solid;
@@ -26,7 +26,7 @@ nav{
 }
 #nav{
     border-right-width: 0;
-    padding-left: 2rem;
+    padding-left: 0.5rem;
 }
 #nav>ul{
     /*background-color: #f0f0f0;*/

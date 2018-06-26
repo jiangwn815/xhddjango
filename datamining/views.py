@@ -13,7 +13,7 @@ from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
 from time import time
 from django.forms.models import model_to_dict
-
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, 'datacleaning/index.html')
@@ -44,7 +44,7 @@ def userlist_paginator(request):
     return render(request, 'datacleaning/userpaginator.html', {'contacts': users,
                                                                'sumno': sumno})
 
-
+@login_required
 def showname(request):
     st = request.GET.get('searchText', default="")
     c6 = request.GET.get('searchChannelSix', default="")
@@ -63,7 +63,10 @@ def showname(request):
     return render(request, 'datacleaning/name_list.html', {'contacts': users, 'sumno': sumno})
 
 
+
 def product_info_list(request):
+    username=request.user.__str__()
+    print(username)
     st = request.GET.get('searchText', default="")
     c6 = request.GET.get('searchChannelSix', default="")
     sn = request.GET.get('searchName', default="")
@@ -97,7 +100,9 @@ def product_info_list(request):
     return render(request, 'datacleaning/product_info_list.html', {'productlist': users,
                                                                    'subscribe_plan': subscribe_plan_list,
                                                                    'charge_plan': charge_plan_list,
-                                                                   'product_no': product_no})
+                                                                   'product_no': product_no,
+                                                                   'current_user': username
+                                                                   })
 
 
 def showcustomer(request, customer_id):

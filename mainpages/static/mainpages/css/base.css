@@ -1,16 +1,38 @@
 
 body, button, input, select, textarea{
     font-family: "Microsoft Yahei","Hiragino Sans GB",tahoma,arial !important;
-    outline:none;
-  }
-header{
 
-    padding-left: 1rem;
-    padding-right: 1rem;
-    border-bottom: #2aabd2  0.2rem solid;
+  }
+header a.nav-link{
+    font-size: 80%;
+    padding: 0.2rem 0.5rem;
+}
+nav>ul>li>a{
+    color: rgba(0, 0, 0, 65);
+}
+div.sidebar{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0rem;
+}
+header{
+    background-color: #fff;
+    border-bottom: #338bd9 1px solid;
+
+}
+#main-body{
+    padding-top: 1rem;
 }
 div.navbar{
-    padding: 0;
+    padding-bottom: 0rem;
+    padding-top: 0rem;
+}
+/*
+header{
+
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-bottom: #2aabd2  0.2rem solid;
 }
 header li a.nav-link{
     font-size: 80%;
@@ -26,33 +48,32 @@ nav{
     height:auto;
     min-height: 31rem;
     background-color: #f0f3f5;
-    font-size: 65%;
 }
 #nav{
     border-right-width: 0;
     padding-left: 0.5rem;
 }
 #nav>ul{
-    /*background-color: #f0f0f0;*/
+
     background-color: rgb(68,68,68);
 }
 nav>ul>li{
-    padding: 0rem 0rem;
-    /*border-right: #f0f0f0 0.4rem solid;
-    border-left: #f0f0f0 0.4rem solid;*/
+    padding: 1rem 0rem;
+
+
     border-bottom: #2aabd2 0.1rem solid;
 
 }
 nav li:first-child{
     border-top: #f9f9f9 0.1rem solid;
-    /*margin-top: 4rem;*/
+
 }
 nav li:hover{
-    border-right: #2aabd2 0rem solid;
-    border-left: #2aabd2 0rem solid;
+    border-right: #2aabd2 0.4rem solid;
+    border-left: #2aabd2 0.4rem solid;
 }
 nav a{
-    /*color: #0c3c26;*/
+
     color: #fff;
     text-align: center;
 }
@@ -61,13 +82,13 @@ nav a:link,nav a:visited{
 }
 
 nav a:hover,nav a:active{
-    /*color: #0c3c26;*/
-    color: #2aabd2;
 
+    color: #2aabd2;
+    font-weight: 900;
     text-align: center;
 }
 #main-body{
-    margin-top: 2.5rem;
+    margin-top: 4rem;
     height:auto;
     min-height: 30rem;
     background-color: #f0f3f5;
@@ -110,7 +131,7 @@ a.register-btn:hover{
     color: #fff;
     font-weight: 900;
     background-color: #2aabd2;
-    border: #2aabd2 0.5rem solid;
+    border: #2aabd2 0.1rem solid;
 }
 #footer{
     color: #f0f0f0;
@@ -126,8 +147,4 @@ a.register-btn:hover{
 .btn.btn-primary:hover{
     background-color: #40d0f0 !important;
     border-color: #40d0f0 ;
-}
-.form-row{
-    margin-top: 0.2rem;
-    margin-bottom: 0.3rem;
-}
+}*/

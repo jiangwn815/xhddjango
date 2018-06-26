@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="icon" sizes="200x200" href="{% static 'mainpages/favicon.ico' %}" />
+    <link rel="shortcut icon" href="{% static 'mainpages/favicon.ico' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/base.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/bootstrap.css' %}" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    {% block loadcss %}{% endblock %}
+    <title>{% block title %}有度有数{% endblock %}</title>
+</head>
+<body>
+<header class="fixed-top">
+    <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <img src="{% static 'mainpages/img/headerlogo.png' %}" width="100rem">
+        </a>
+        <ul class="nav">
+            <li class="nav-item">
+           {% if request.user.is_authenticated %}
+              <a class="nav-link register-btn" href="{% url 'mainpages:logout_view' %}"><i class="fa fa-sign-out"></i> {{  request.user }}</a>
+            {% else %}
+                <a class="nav-link register-btn" href="{% url 'mainpages:login_page' %}"><i class="fa fa-sign-in"></i> 登&nbsp&nbsp录</a>
+            {% endif %}
+          </li>
+          <li class="nav-item">
+            <a class="nav-link register-btn"  href="{% url 'mainpages:register' %}">注&nbsp&nbsp册</a>
+          </li>
+        </ul>
+    </div>
+</header>
+<div class="container-fluid mt-sm-5" id="main-body">
+    <div class="row flex-xl-nowrap">
+        <div class="col-xl-2 sidebar">
+        <nav class="col">
+            <ul class="nav flex-column">
+
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-user-circle"></i> 用户中心</a></li>
+                <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-list-ul"></i> 项目分类</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://jiangwn815.github.io/"><i class="fa fa-user-circle"></i> 关于我</a></li>
+                <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
+            </ul>
+        </nav>
+        </div>
+        <main class="col-xl-8">
+            {% block mainbody %}{% endblock %}
+        </main>
+        <div class="col-xl-2 sidebar">
+        </div>
+    </div>
+</div>
+<footer id="footer" class="text-center">
+    <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
+</footer>
+<script src="{% static 'datacleaning/js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'datacleaning/js/popper.min.js' %}"></script>
+<script src="{% static 'datacleaning/js/bootstrap.js' %}"></script>
+<script src="{% static 'datacleaning/js/datacleaning.js' %}" charset="UTF-8"></script>
+{% block loadjs %}{% endblock %}
+</body>
+</html>

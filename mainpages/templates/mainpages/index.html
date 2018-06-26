@@ -1,49 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="icon" sizes="200x200" href="{% static 'mainpages/favicon.ico' %}" />
-    <link rel="shortcut icon" href="{% static 'mainpages/favicon.ico' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/style.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/bootstrap.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/fontawesome.css' %}" />
-    <script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
-    <script src="{% static 'mainpages/js/tether.min.js' %}"></script>
-    <script src="{% static 'mainpages/js/bootstrap.js' %}"></script>
-    <title>有度有数</title>
-</head>
-<body>
-<header class="fixed-top">
-    <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'mainpages/img/headerlogo.png' %}" width="140rem">
-        </a>
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link register-btn" href="#">登&nbsp&nbsp录</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link register-btn" href="{% url 'mainpages:register' %}">注&nbsp&nbsp册</a>
-          </li>
-        </ul>
-    </div>
-
-</header>
-<div class="container-fluid" id="main-body">
-<div class="row">
-    <nav class="col-2 " id="nav">
-        <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link active" href="#">首&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp页</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">个人中心</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">产品介绍</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
-            <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
-        </ul>
-    </nav>
-    <main class="col-10" id="main">
+{% extends "base.html" %}
+{% block mainbody %}
         <div class="jumbotron" id="jn1">
           <h1>数据深度</h1>
           <br/>
@@ -59,29 +15,9 @@
             <br/>
               <p class="jn-comment">This is a simple hero unit, a simple jumbotron-style component for calling extra
                   attention to featured content or information.</p>
-
             <br/><br/><br/>
               <p class="lead" >
                 <a class="btn register-btn" href="{% url 'mainpages:register' %}" role="button">快速注册</a>
               </p>
         </div>
-        <div id="user-list" >
-        {% if latest_user_list %}
-            <h3>用户列表</h3>
-            <ul class="list-group">
-            {% for user in latest_user_list %}
-                <li class="list-group-item"><a href="{% url 'mainpages:showuser' mobile=user.mobile %}">{{ user.mobile }}</a></li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No users are available.</p>
-        {% endif %}
-        </div>
-    </main>
-</div>
-</div>
-<footer id="footer">
-    <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
-</footer>
-</body>
-</html>
+{% endblock %}

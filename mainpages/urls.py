@@ -4,8 +4,11 @@ from . import views
 
 app_name = 'mainpages'
 urlpatterns = [
-    url(r'^$', views.index, name='index'), # name主要用于模板引用视图函数
+    url(r'^$', views.index, name='index'),  # name主要用于模板引用视图函数
     url(r'^register$', views.register, name='register'),
+    url(r'^login_page$', views.login_page, name='login_page'),
+    url(r'^login_view$', views.login_view, name='login_view'),
+    url(r'^logout$', views.logout_view, name='logout_view'),
     url(r'^sms$', views.sms, name='sms'),
     url(r'^crawler$', views.crawler, name='crawler'),
     url(r'^crawlerpic$', views.crawlerpic, name='crawlerpic'),

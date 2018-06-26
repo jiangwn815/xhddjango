@@ -1,50 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="icon" sizes="200x200" href="{% static 'mainpages/favicon.ico' %}" />
-    <link rel="shortcut icon" href="{% static 'mainpages/favicon.ico' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/style.css' %}" />
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block loadcss %}
     <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/register.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/bootstrap.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'mainpages/css/fontawesome.css' %}" />
 
-    <title>有度有数</title>
-</head>
-<body>
-
-<header class="fixed-top">
-    <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'mainpages/img/headerlogo.png' %}" width="140rem">
-        </a>
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link register-btn" href="#">登&nbsp&nbsp录</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link register-btn" href="#">注&nbsp&nbsp册</a>
-          </li>
-        </ul>
-    </div>
-
-</header>
-<div class="container-fluid" id="main-body">
-
-<div class="row">
-    <nav class="col-2 " id="nav">
-        <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link active" href="#">首&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp页</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">个人中心</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">产品介绍</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
-            <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
-        </ul>
-    </nav>
-    <main class="col-10" id="main">
+{% endblock %}
+ {% block mainbody %}
         <h6 class="page-title">用户注册</h6>
         <hr>
 
@@ -107,7 +67,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-6 offset-2">
-                        <button type="button" class="btn btn-primary btn-block" id="submit-btn">提交</button>
+                        <button type="submit" class="btn btn-primary btn-block" id="submit-btn">提交</button>
                         </div>
                     </div>
                 </div>
@@ -173,14 +133,8 @@
                         </div>
                     </div>
         </div>
-    </main>
-    <script src="{% static 'mainpages/js/jquery-3.1.1.min.js' %}"></script>
 
+    {% endblock %}
+{% block loadjs %}
     <script src="{% static 'mainpages/js/register.js' %}" charset="UTF-8"></script>
-</div>
-</div>
-<footer id="footer">
-    <span>&copy;&copy;中国电信股份有限公司北京分公司版权所有</span>
-</footer>
-</body>
-</html>
+   {% endblock %}

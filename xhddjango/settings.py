@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 from .dbconfig import db
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,7 +39,7 @@ INSTALLED_APPS = [
     'ydys.apps.YdysConfig',
     'fileprocess.apps.FileprocessConfig',
     'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.auth',  # 创建add change delete 三类permissions（在运行migrate的时候创建）
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -99,6 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
 MEDIA_URL = '/media/'
+LOGIN_URL = '/mainpages/login_page'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/

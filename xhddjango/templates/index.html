@@ -1,63 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta charset="UTF-8">
-    {% load static %}
-    <link rel="icon" sizes="200x200" href="{% static 'datacleaning/favicon.ico' %}" />
-    <link rel="shortcut icon" href="{% static 'datacleaning/favicon.ico' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'datacleaning/css/style.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'datacleaning/css/bootstrap.css' %}" />
-
-
-    <title>有度有数</title>
-</head>
-<body>
-<header class="fixed-top">
-    <div class="navbar navbar-toggleable-sm navbar-inverse justify-content-between">
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'mainpages/img/headerlogo.png' %}" width="140rem">
-        </a>
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link register-btn" href="#">登&nbsp&nbsp录</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link register-btn"  href="{% url 'mainpages:register' %}">注&nbsp&nbsp册</a>
-          </li>
-        </ul>
+{% extends "base.html" %}
+{% block mainbody %}
+    <div id="list-example" class="list-group">
+        <a class="list-group-item list-group-item-action" href="{% url 'datamining:index' %}">数据处理</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'datamining:product_info_list' %}">产品列表</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'datamining:showname' %}">用户列表</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'fileprocess:index' %}">文件处理</a>
+        <a class="list-group-item list-group-item-action" href="{% url 'mainpages:index' %}">测试</a>
     </div>
-
-</header>
-<div class="container-fluid" id="main-body">
-    <div class="row">
-        <nav class="col-2 " id="nav">
-            <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link active" href="#">首&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp页</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">个人中心</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">产品介绍</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
-                <li class="nav-item"><a class="nav-link disabled" href="#">待定</a></li>
-            </ul>
-        </nav>
-        <main class="col-10" id="main">
-            <div id="list-example" class="list-group">
-              <a class="list-group-item list-group-item-action" href="{% url 'datamining:index' %}">数据处理</a>
-              <a class="list-group-item list-group-item-action" href="{% url 'fileprocess:index' %}">文件处理</a>
-              <a class="list-group-item list-group-item-action" href="{% url 'mainpages:index' %}">测试</a>
-            </div>
-
-        </main>
-
-    </div>
-</div>
-<footer id="footer" class="fixed-bottom">
-    <span>&copy;中国电信股份有限公司北京分公司版权所有</span>
-</footer>
-<script src="{% static 'datacleaning/js/jquery-3.1.1.min.js' %}"></script>
-<script src="{% static 'datacleaning/js/popper.min.js' %}"></script>
-<script src="{% static 'datacleaning/js/bootstrap.js' %}"></script>
-<script src="{% static 'datacleaning/js/datacleaning.js' %}" charset="UTF-8"></script>
-</body>
-</html>
+{% endblock %}

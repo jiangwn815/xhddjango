@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 
-from .models import User, Order, Task
+from .models import Order, Task
+from django.contrib.auth.models import User
 from django.urls import reverse
 import json, time
 import requests
@@ -16,9 +17,14 @@ import zipfile
 import csv
 import codecs, chardet
 from openpyxl import Workbook, load_workbook
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import make_password
 
 
 def index(request):
+    '''
     latest_user_list = User.objects.order_by("-createdAt")
     print(latest_user_list[0].mobile)
     kk = {}
@@ -31,11 +37,34 @@ def index(request):
         "latest_user_list": latest_user_list,
     }
     # return HttpResponse(template.render(context, request))
-    return render(request, 'mainpages/index.html', context)  # return a HttpResponse object
+    '''
+    # return render(request, 'mainpages/index.html', context)  # return a HttpResponse object
+    return render(request, 'mainpages/index.html')
 
 
 def register(request):
     return render(request, 'mainpages/register.html')
+
+
+def login_page(request):
+    return render(request, 'mainpages/login.html')
+
+
+def login_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return HttpResponseRedirect(reverse('mainpages:index'))
+    else:
+        # Return an 'invalid login' error message.
+        return render(request, 'mainpages/login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('mainpages:index'))
 
 
 def crawler(request):
@@ -124,9 +153,8 @@ def bjdata(request):
         mergexl(filepath, ws)
     wb.save(zippath+"/merge.xlsx")
     print("SHEET NAMES:", wb.sheetnames)
-
-
     return JsonResponse(ul)
+
 
 def printstatus(res):
     print("Status code:", res.status_code)
@@ -164,6 +192,7 @@ def crawlerpic(request):
 
     return JsonResponse(ul)
 
+
 def sms(request):
     user_list = User.objects
     order_list = Order.objects
@@ -175,10 +204,12 @@ def smslist(request):
     order_list = Order.objects
     return render(request, 'mainpages/sms_list.html', {"ul": user_list,"ol": order_list})
 
+
 def smsedit(request):
     user_list = User.objects
     order_list = Order.objects
     return render(request, 'mainpages/sms_edit.html', {"ul": user_list,"ol": order_list})
+
 
 def showuser(request, mobile):
     """
@@ -192,17 +223,17 @@ def showuser(request, mobile):
 
 
 def users(request):
-    userslist = User.objects.order_by("-createdAt")
+    userslist = User.objects.order_by("date_joined")
     print(type(userslist))
     ul = {}
     for e in userslist:
-        ul[e.mobile] = e.createdAt
+        ul[e.mobile] = e.date_joined
     return JsonResponse(ul)
 
 
 def createuser(request):
-    User.objects.create(passwd=request.POST["password"],mobile=request.POST["contactNumber"], nickname=request.POST["userName"])
-    # return render(request, 'mainpages/index.html',{'latest_user_list': latest_user_list})
+    User.objects.create(password=make_password(request.POST["password"]), username=request.POST["userName"])
+
     return HttpResponseRedirect(reverse('mainpages:index'))
 
 
