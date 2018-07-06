@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^tasks/create$', views.createtask, name='createtask'),
     url(r'^tasks/view$', views.viewtask, name='viewtask'),
     url(r'^tasks/delete$', views.deletetask, name='deletetask'),
+
     url(r'^(?P<mobile>[0-9]+)$', views.showuser, name="showuser"),
     url(r'^(?P<mobile>[0-9]+)/info/$', views.info, name="info"),
     url(r'^(?P<mobile>[0-9]+)/useramount/$', views.useramount, name="useramount"),

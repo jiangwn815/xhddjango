@@ -64,6 +64,9 @@ class TeleUser(Baseuser):
 
     class Meta:
         ordering = ['-customer_id']
+        permissions = (
+            ('access_teledata', 'Can access tele related data'),
+        )
 
 
 class Bill(models.Model):
@@ -88,3 +91,10 @@ class ResourceUsage(models.Model):
 
     class Meta:
         managed = True   # 如果为False则django不会主动创建或删除table，应用于使用已有table的情景
+
+
+class TeleDepartment(models.Model):
+    name = models.CharField(max_length=64)
+    department_id = models.CharField(max_length=32, blank=True, null=True)
+    level = models.IntegerField()
+    subordination = models.ForeignKey('TeleDepartment', on_delete= models.CASCADE, blank=True, null=True)

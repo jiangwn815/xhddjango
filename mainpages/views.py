@@ -21,6 +21,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
+import itchat
 
 
 def index(request):
@@ -300,8 +301,11 @@ def viewtask(request):
         "receiverNumber": task.receiverNumber
     })
 
+
 @csrf_exempt
 def deletetask(request):
     task = get_object_or_404(Task, id=request.POST['id'])
     task.delete()
     return JsonResponse({"code": "0"})
+
+

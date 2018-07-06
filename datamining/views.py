@@ -11,9 +11,12 @@ import xlrd
 from .models import Productinfo,TeleUser, Bill, ResourceUsage
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
-from time import time
+import time
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
+import itchat
+
 
 def index(request):
     return render(request, 'datacleaning/index.html')
@@ -26,6 +29,55 @@ def userlist(request):
         "users": users
     }
     return HttpResponse(template.render(context, request))
+
+
+def open_QR():
+    for get_count in range(10):
+        print('Getting uuid')
+        uuid = itchat.get_QRuuid()
+        while uuid is None:
+            uuid = itchat.get_QRuuid();
+            time.sleep(1)
+        print('Getting QR Code')
+        if itchat.get_QR(uuid):
+            break
+        elif get_count >= 9:
+            print('Failed to get QR Code, please restart the program')
+
+    print('Please scan the QR Code')
+    return uuid
+
+
+def wechat(request):
+    return render(request, 'datacleaning/wechat.html')
+
+
+def getqrimg(request):
+    ul = {}
+    print('Getting oepnqr')
+    uuid = open_QR()
+    waitForConfirm = False
+    while 1:
+        status = itchat.check_login(uuid)
+        if status == '200':
+            break
+        elif status == '201':
+            if waitForConfirm:
+                print('Please press confirm')
+                waitForConfirm = True
+        elif status == '408':
+            print('Reloading QR Code')
+            uuid = open_QR()
+            waitForConfirm = False
+        time.sleep(3)
+    userInfo = itchat.web_init()
+    print("ui",userInfo)
+    # itchat.show_mobile_login()
+    # itchat.get_contract()
+    # print('Login successfully as %s' % userInfo['NickName'])
+    itchat.start_receiving()
+    return JsonResponse(ul)
+    # itchat.send('Hello, filehelper', toUserName='filehelper')
 
 
 def userlist_paginator(request):
@@ -44,7 +96,9 @@ def userlist_paginator(request):
     return render(request, 'datacleaning/userpaginator.html', {'contacts': users,
                                                                'sumno': sumno})
 
-@login_required
+
+@login_required()
+@permission_required('datamining.access_teledata', raise_exception=True)
 def showname(request):
     st = request.GET.get('searchText', default="")
     c6 = request.GET.get('searchChannelSix', default="")
@@ -63,7 +117,8 @@ def showname(request):
     return render(request, 'datacleaning/name_list.html', {'contacts': users, 'sumno': sumno})
 
 
-
+@login_required()
+@permission_required('datamining.access_teledata', raise_exception=True)
 def product_info_list(request):
     username=request.user.__str__()
     print(username)
