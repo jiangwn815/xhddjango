@@ -8,7 +8,6 @@ $(function(){
 
         $.getJSON('getqrimg',getdata, function(re){
             $.each(re,function(key,value){
-
                 console.log(key+":"+value);
             });
         });

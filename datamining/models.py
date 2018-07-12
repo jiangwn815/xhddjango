@@ -97,4 +97,7 @@ class TeleDepartment(models.Model):
     name = models.CharField(max_length=64)
     department_id = models.CharField(max_length=32, blank=True, null=True)
     level = models.IntegerField()
-    subordination = models.ForeignKey('TeleDepartment', on_delete= models.CASCADE, blank=True, null=True)
+    superior = models.ForeignKey('TeleDepartment', on_delete= models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return self.name

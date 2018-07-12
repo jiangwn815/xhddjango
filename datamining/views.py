@@ -9,17 +9,27 @@ import copy
 import csv,chardet,codecs
 import xlrd
 from .models import Productinfo,TeleUser, Bill, ResourceUsage
+from fileprocess.models import UploadFile
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
 import time
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
+from django.conf import settings
 import itchat
-
+from .mapping import tele_field_mapping
 
 def index(request):
-    return render(request, 'datacleaning/index.html')
+
+    files = UploadFile.objects.filter(user=request.user)
+    for file in files.all():
+        print(file.filedata.__str__())
+        print(file.filedata.path)
+        print(file.filedata.url)
+        print(file.filedata.name)
+        print(file.id)
+    return render(request, 'datacleaning/index.html', {"files":files})
 
 
 def userlist(request):
@@ -120,7 +130,7 @@ def showname(request):
 @login_required()
 @permission_required('datamining.access_teledata', raise_exception=True)
 def product_info_list(request):
-    username=request.user.__str__()
+    username = request.user.__str__()
     print(username)
     st = request.GET.get('searchText', default="")
     c6 = request.GET.get('searchChannelSix', default="")
@@ -128,7 +138,6 @@ def product_info_list(request):
     pt = request.GET.get('searchProductType', default="")
     sp = request.GET.get('searchSubscribePlan', default="")
     cp = request.GET.get('searchChargePlan', default="")
-
     productlist = Productinfo.objects.order_by('user_no').all()
     if st:
         productlist = productlist.filter(charge_plan__contains=st)
@@ -237,96 +246,42 @@ def toutf8(fn):
         return newfile
 
 
+# 返回表中第一行各字段的列值
+# 参数1：第一行的值
+# 参数2：对应字典
 def field_location_mapping(first_row, field_mapping):
-    users = {}
+    location = {}
     for cell in first_row:  # 提取表的第一行
         print("开始遍历文件头......", cell.value)
-        for key, field in field_mapping.items():
+        for key, field in field_mapping.items():  # 遍历对应字典中各项
             if isinstance(field, str):
                 if cell.value.endswith(field):
-                    users[key] = cell.col_idx
-            elif isinstance(field, dict):
-                multi_rows = True
+                    location[key] = cell.col_idx  # 存储某个字段在表中坐标
+            elif isinstance(field, dict):      # 如果表中字段为多时间维度
                 for k, v in field.items():
                     if cell.value.endswith(v):
-                        if key in users:
-                            users[key].update({k: cell.col_idx})
+                        if key in location:
+                            location[key].update({k: cell.col_idx})
                         else:
-                            users.update({key: {k: cell.col_idx}})
-    return users
+                            location.update({key: {k: cell.col_idx}})
+    return location
 
 
 def dealxlsx(request):
+    ul = {}
+    file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path
+    print(file_path)
+    ws = load_workbook(file_path).active
+
+    print(ws)
+    return JsonResponse(ul)
+
+
+def dealxlsx2(request):
     print("开始处理文件......")
     ul = {}
 
-    field_mapping = {
-                     "customer_id": "客户编号",
-                     "username": "客户名称",
-                     "user_no": "用户编号",
-                     "mobile_no": "服务号码"
-                     }
-    field_mapping = {
-        "customer_id": "客户编号",
-        "username": "客户名称",
-        "user_no": "用户编号",
-        "mobile_no": "服务号码"
-    }
-    field_mapping = {
-        "customer_id": "客户编号",
-        "user_no": "用户编号",
-        "zz_income": {
-            "zz_income_last0": "本月实际应收(总账)(元)",
-            "zz_income_last1": "最近第1月收入(总账)(元)",
-            "zz_income_last2": "最近第2月收入(总账)(元)",
-            "zz_income_last3": "最近第3月收入(总账)(元)",
-            "zz_income_last4": "最近第4月收入(总账)(元)",
-            "zz_income_last5": "最近第5月收入(总账)(元)"
-        },
-        "call_times": {
-            "call_times_last0": "本月基本计费时长(分钟)",
-            "call_times_last1": "最近第1月计费时长(分钟)",
-            "call_times_last2": "最近第2月计费时长(分钟)",
-            "call_times_last3": "最近第3月计费时长(分钟)",
-            "call_times_last4": "最近第4月计费时长(分钟)",
-            "call_times_last5": "最近第5月计费时长(分钟)"
-        },
-        "data_usage": {
-            "data_usage_last0": "本月无线宽带总流量(KB)",
-            "data_usage_last1": "最近第1月无线宽带流量(KB)",
-            "data_usage_last2": "最近第2月无线宽带流量(KB)",
-            "data_usage_last3": "最近第3月无线宽带流量(KB)",
-            "data_usage_last4": "最近第4月无线宽带流量(KB)",
-            "data_usage_last5": "最近第5月无线宽带流量(KB)"
-        },
-        "text_usage": {
-            "text_usage_last0": "本月短信条数(条)",
-            "text_usage_last1": "最近第1月短信条数(条)",
-            "text_usage_last2": "最近第2月短信条数(条)",
-            "text_usage_last3": "最近第3月短信条数(条)",
-            "text_usage_last4": "最近第4月短信条数(条)",
-            "text_usage_last5": "最近第5月短信条数(条)"
-        }
-    }
-    field_mapping = {"mobile_no": "服务号码",
-                     "user_no": "用户编号",
-                     "in_time": "入网时间",
-                     "out_time": "离网时间",
-                     "out_type": "离网类型",
-                     "user_state": "用户状态",
-                     "user_state_starttime": "当前状态开始时间",
-                     "user_online_time": "用户在网时间（月）",
-                     "double_seller": "双计人",
-                     "brokerage_channel": "合作渠道",
-                     "subscribe_plan": "租机计划",
-                     "charge_plan": "资费名称",
-                     "mainproduct_second": "主产品细类二级",
-                     "singleproduct_sub": "单产品销售细类",
-                     "seller_name": "用户发展员工",
-                     "seller_channel_third": "用户发展三级部门",
-                     "seller_channel_fifth": "用户发展五级部门",
-                     "seller_channel_sixth": "用户发展六级部门"
-                     }
+    field_mapping = tele_field_mapping
     fpath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码/外呼用户分析2017入网-201802.xlsx'
     start = time()
     wb = load_workbook(fpath)

@@ -39,7 +39,7 @@ $(function(){
      $('#dealXlsx').click(function(){
         console.log("click in dealxlsx");
         var getdata={};
-        getdata["picnumber"]=$('#picNumber').val();
+        getdata["fileSelect"]=$('#fileSelect').val();
         $.getJSON('dealxlsx',getdata, function(re){
             $.each(re,function(key,value){
 
