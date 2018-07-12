@@ -249,11 +249,11 @@ def toutf8(fn):
 # 返回表中第一行各字段的列值
 # 参数1：第一行的值
 # 参数2：对应字典
-def field_location_mapping(first_row, field_mapping):
+def field_location_mapping(first_row):
     location = {}
     for cell in first_row:  # 提取表的第一行
         print("开始遍历文件头......", cell.value)
-        for key, field in field_mapping.items():  # 遍历对应字典中各项
+        for key, field in tele_field_mapping.items():  # 遍历对应字典中各项
             if isinstance(field, str):
                 if cell.value.endswith(field):
                     location[key] = cell.col_idx  # 存储某个字段在表中坐标
@@ -273,7 +273,7 @@ def dealxlsx(request):
     print(file_path)
     ws = load_workbook(file_path).active
 
-    print(ws)
+    print(field_location_mapping(ws[1]))
     return JsonResponse(ul)
 
 
@@ -282,7 +282,7 @@ def dealxlsx2(request):
     ul = {}
 
     field_mapping = tele_field_mapping
-    fpath = '/users/jwn/Desktop/工作文件/外呼/2017年3~11月下单妥投号码/外呼用户分析2017入网-201802.xlsx'
+    fpath = ""
     start = time()
     wb = load_workbook(fpath)
     stop = time()
