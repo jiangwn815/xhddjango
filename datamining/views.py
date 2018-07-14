@@ -19,6 +19,7 @@ from django.contrib.auth.decorators import permission_required
 from django.conf import settings
 import itchat
 from .mapping import tele_field_mapping
+import re
 
 def index(request):
 
@@ -247,8 +248,7 @@ def toutf8(fn):
 
 
 # 返回表中第一行各字段的列值
-# 参数1：第一行的值
-# 参数2：对应字典
+# 参数1：表格第一行的表头
 def field_location_mapping(first_row):
     location = {}
     for cell in first_row:  # 提取表的第一行
@@ -269,11 +269,26 @@ def field_location_mapping(first_row):
 
 def dealxlsx(request):
     ul = {}
-    file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path
+    file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path  # 获取用户所选文件的地址
     print(file_path)
-    ws = load_workbook(file_path).active
+    ws = load_workbook(file_path).active  # 获取文件中的活动sheet
 
-    print(field_location_mapping(ws[1]))
+    mapping = field_location_mapping(ws[1])
+    for row in ws.iter_rows(min_row=2):
+        ui = {}  # 存储单行字段-值信息
+        for cell in row:
+            for key, idx in mapping.items():
+                if isinstance(idx, int):
+                    if cell.col_idx == idx:
+                        ui[key] = cell.value
+                elif isinstance(idx, dict):
+                    for k, v in idx.items():
+                        if cell.col_idx == v:
+                            if key in ui:
+                                ui[key].update({k: cell.value})
+                            else:
+                                ui.update({key: {k: cell.value}})
+        print(re.match(r'^(\w+)(\d+)', ))
     return JsonResponse(ul)
 
 
