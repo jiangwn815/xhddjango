@@ -20,6 +20,7 @@ from django.conf import settings
 import itchat
 from .mapping import tele_field_mapping
 import re
+from .models import TeleDepartment
 
 def index(request):
 
@@ -274,6 +275,7 @@ def dealxlsx(request):
     ws = load_workbook(file_path).active  # 获取文件中的活动sheet
 
     mapping = field_location_mapping(ws[1])
+    count = 0
     for row in ws.iter_rows(min_row=2):
         ui = {}  # 存储单行字段-值信息
         for cell in row:
@@ -288,7 +290,13 @@ def dealxlsx(request):
                                 ui[key].update({k: cell.value})
                             else:
                                 ui.update({key: {k: cell.value}})
-        print(re.match(r'^(\w+)(\d+)', ))
+        sc3 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_third'])
+        sc4 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_fourth'])
+        if sc3:
+            o, c = TeleDepartment.objects.update_or_create(name=sc3.group(1), department_id=sc3.group(2), level=3)
+            if c:
+                count = count+1
+    print("{} obejcts created".format(count))
     return JsonResponse(ul)
 
 
