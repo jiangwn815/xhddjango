@@ -4,15 +4,15 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.db.models import Avg
 from django.db.models import Count
-import os
+import os, csv
 import copy
 import csv,chardet,codecs
 import xlrd
-from .models import Productinfo,TeleUser, Bill, ResourceUsage
+from .models import Productinfo,TeleUser, Bill, ResourceUsage, KDUser
 from fileprocess.models import UploadFile
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
-import time
+import time as ttt
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
@@ -271,16 +271,30 @@ def field_location_mapping(first_row):
 def dealxlsx(request):
     ul = {}
     file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path  # 获取用户所选文件的地址
-    print(file_path)
-    ws = load_workbook(file_path).active  # 获取文件中的活动sheet
+    print('开始处理文件：', file_path)
+    start = ttt.time()
+    with open(file_path, 'r') as cf:
+        reader = csv.reader(cf)
+        count = 0
+        for row in reader:
+            KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1])
+            count = count+1
+            if count == 10000:
+                print(count, " Finished")
+                break
+    end = ttt.time()
+    print(end-start)
+    return JsonResponse(ul)
 
+
+    ws = load_workbook(file_path).active  # 获取文件中的活动sheet
     mapping = field_location_mapping(ws[1])
-    count = 0
-    rc = 1
-    for row in ws.iter_rows(min_row=2, max_row=50):
+    rc = 0
+    for row in ws.iter_rows(min_row=2, max_row=500):
         ui = {}  # 存储单行字段-值信息
-        print('ROW',rc)
         rc = rc+1
+        if rc%10000 ==0:
+            print('已处理', rc, " 行数据")
         for cell in row:
             for key, idx in mapping.items():
                 if isinstance(idx, int):
@@ -293,8 +307,8 @@ def dealxlsx(request):
                                 ui[key].update({k: cell.value})
                             else:
                                 ui.update({key: {k: cell.value}})
-        print(ui)
-        TeleUser.objects.update_or_create(user_no=ui['user_no'], mobile_no=ui['mobile_no'], defaults={'type': 'kuandai20180717'})
+
+        KDUser.objects.update_or_create(user_no=ui['user_no'], mobile_no=ui['mobile_no'], defaults={'type': 'kuandai20180717'})
         '''
         try:
             sc2 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_second'])
@@ -313,7 +327,7 @@ def dealxlsx(request):
             o5, c5 = TeleDepartment.objects.update_or_create(name=sc5.group(1), department_id=sc5.group(2), level=5,
                                                              defaults={'superior': o4})
         '''
-    print("{} obejcts created".format(count))
+    print("{} obejcts created".format(rc))
     return JsonResponse(ul)
 
 
@@ -323,21 +337,21 @@ def dealxlsx2(request):
 
     field_mapping = tele_field_mapping
     fpath = ""
-    start = time()
+    start = ttt.time()
     wb = load_workbook(fpath)
-    stop = time()
+    stop = ttt.time()
     print("文件载入时间：", stop-start)
     ul['file_load_time'] = stop-start
     for sheet_name in wb.sheetnames:
         ws = wb[sheet_name]
         # 利用表头确定每列数据对应的字段
         multi_rows = False
-        start = time()
+
         users = field_location_mapping(ws[1], field_mapping)
-        stop = time()
+
         print("文件头匹配时间：", stop - start)
         ul['file_match_time'] = stop-start
-        start = time()
+
         for row in ws.iter_rows(min_row=2):
             ui = {}  # 存储单行字段-值信息
             for cell in row:

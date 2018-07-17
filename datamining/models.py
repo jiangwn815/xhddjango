@@ -61,13 +61,25 @@ class TeleUser(Baseuser):
     customer_id = models.CharField(max_length=20)
     user_no = models.CharField(max_length=20)
     mobile_no = models.CharField(max_length=12, blank=True, null=True)
-    type = models.CharField(max_length=12, blank=True, null=True)
+    type = models.CharField(max_length=32, blank=True, null=True)
+    wechat_id = models.CharField(max_length=32, blank=True, null=True)
+    wechat_bind_time = models.DateTimeField(blank=True, null=True)
+    open_id = models.CharField(max_length=32, blank=True, null=True)
 
     class Meta:
         ordering = ['-customer_id']
         permissions = (
             ('access_teledata', 'Can access tele related data'),
         )
+
+
+class KDUser(models.Model):
+    user_no = models.CharField(primary_key=True, max_length=20)
+    mobile_no = models.CharField(max_length=12, blank=True, null=True)
+    type = models.CharField(max_length=32, blank=True, null=True)
+    wechat_id = models.CharField(max_length=32, blank=True, null=True)
+    wechat_bind_time = models.DateTimeField(blank=True, null=True)
+    open_id = models.CharField(max_length=32, blank=True, null=True)
 
 
 class Bill(models.Model):
