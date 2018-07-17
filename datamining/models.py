@@ -61,6 +61,7 @@ class TeleUser(Baseuser):
     customer_id = models.CharField(max_length=20)
     user_no = models.CharField(max_length=20)
     mobile_no = models.CharField(max_length=12, blank=True, null=True)
+    type = models.CharField(max_length=12, blank=True, null=True)
 
     class Meta:
         ordering = ['-customer_id']

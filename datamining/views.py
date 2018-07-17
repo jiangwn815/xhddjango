@@ -276,8 +276,11 @@ def dealxlsx(request):
 
     mapping = field_location_mapping(ws[1])
     count = 0
-    for row in ws.iter_rows(min_row=2):
+    rc = 1
+    for row in ws.iter_rows(min_row=2, max_row=50):
         ui = {}  # 存储单行字段-值信息
+        print('ROW',rc)
+        rc = rc+1
         for cell in row:
             for key, idx in mapping.items():
                 if isinstance(idx, int):
@@ -290,12 +293,26 @@ def dealxlsx(request):
                                 ui[key].update({k: cell.value})
                             else:
                                 ui.update({key: {k: cell.value}})
-        sc3 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_third'])
-        sc4 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_fourth'])
-        if sc3:
-            o, c = TeleDepartment.objects.update_or_create(name=sc3.group(1), department_id=sc3.group(2), level=3)
-            if c:
-                count = count+1
+        print(ui)
+        TeleUser.objects.update_or_create(user_no=ui['user_no'], mobile_no=ui['mobile_no'], defaults={'type': 'kuandai20180717'})
+        '''
+        try:
+            sc2 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_second'])
+            sc3 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_third'])
+            sc4 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_fourth'])
+            sc5 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_fifth'])
+        except TypeError as te:
+            print("Error:", te)
+            print(ui['seller_channel_second'], ui['seller_channel_third'], ui['seller_channel_fourth'])
+        if sc2 and sc3 and sc4 and sc5:
+            o2, c2 = TeleDepartment.objects.update_or_create(name=sc2.group(1), department_id=sc3.group(2), level=2)
+            o3, c3 = TeleDepartment.objects.update_or_create(name=sc3.group(1), department_id=sc3.group(2), level=3,
+                                                             defaults={'superior': o2})
+            o4, c4 = TeleDepartment.objects.update_or_create(name=sc4.group(1), department_id=sc4.group(2), level=4,
+                                                             defaults={'superior': o3})
+            o5, c5 = TeleDepartment.objects.update_or_create(name=sc5.group(1), department_id=sc5.group(2), level=5,
+                                                             defaults={'superior': o4})
+        '''
     print("{} obejcts created".format(count))
     return JsonResponse(ul)
 
