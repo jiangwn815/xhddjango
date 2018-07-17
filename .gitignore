@@ -13,3 +13,4 @@ mainpages/migrations/0003_auto_20170331_2157.py
 mainpages/migrations/0003_auto_20170401_0628.py
 
 /datamining/mapping.py
+/xhddjango/dbconfig.py
