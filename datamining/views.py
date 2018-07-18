@@ -8,7 +8,7 @@ import os, csv
 import copy
 import csv,chardet,codecs
 import xlrd
-from .models import Productinfo,TeleUser, Bill, ResourceUsage, KDUser
+from .models import Productinfo,TeleUser, Bill, ResourceUsage, KDUser, WechatUser
 from fileprocess.models import UploadFile
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
@@ -270,31 +270,83 @@ def field_location_mapping(first_row):
 
 def dealxlsx(request):
     ul = {}
-    file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path  # 获取用户所选文件的地址
-    print('开始处理文件：', file_path)
+    #file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path  # 获取用户所选文件的地址
+    #print('开始处理文件：', file_path)
+
+    file_path = UploadFile.objects.get(pk=13).filedata.path
+    file_path2 = UploadFile.objects.get(pk=14).filedata.path
+    file_path3 = UploadFile.objects.get(pk=15).filedata.path
+
+    '''
     start = ttt.time()
     with open(file_path, 'r') as cf:
         reader = csv.reader(cf)
         count = 0
         for row in reader:
-            KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1])
+            try:
+                KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part1"})
+            except:
+                print(row)
+                pass
             count = count+1
-            if count == 10000:
-                print(count, " Finished")
-                break
-    end = ttt.time()
-    print(end-start)
-    return JsonResponse(ul)
+            if count%10000==0:
+                print(count," finished")
 
+    end = ttt.time()
+    print(count,' rows finished',end-start)
+    
+    start = ttt.time()
+    print('开始处理文件：', file_path2)
+    with open(file_path2, 'r') as cf:
+        reader = csv.reader(cf)
+        count = 0
+        for row in reader:
+            if count < 980000:
+                pass
+
+            try:
+                KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part2"})
+            except:
+                print(row)
+                pass
+            count = count + 1
+
+
+    end = ttt.time()
+    print(count, ' rows finished', end - start)
+    print('开始处理文件：', file_path3)
+    start = ttt.time()
+    '''
+    print('开始处理文件：', file_path3)
+    with open(file_path3, 'r') as cf:
+        reader = csv.reader(cf)
+        count = 0
+        for row in reader:
+            if count % 10000 == 0:
+                print(count," finished")
+            try:
+                KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part3"})
+            except:
+                print(row)
+                pass
+            count = count + 1
+
+
+    end = ttt.time()
+    print(count, ' rows finished', end - start)
+    
+    return JsonResponse(ul)
+    
 
     ws = load_workbook(file_path).active  # 获取文件中的活动sheet
     mapping = field_location_mapping(ws[1])
     rc = 0
-    for row in ws.iter_rows(min_row=2, max_row=500):
+    for row in ws.iter_rows(min_row=2):
         ui = {}  # 存储单行字段-值信息
         rc = rc+1
-        if rc%10000 ==0:
-            print('已处理', rc, " 行数据")
+        update_count = 0
+        if rc % 10000 == 0:
+            print('已处理', rc, " 行数据","|已发现匹配", update_count)
         for cell in row:
             for key, idx in mapping.items():
                 if isinstance(idx, int):
@@ -307,8 +359,23 @@ def dealxlsx(request):
                                 ui[key].update({k: cell.value})
                             else:
                                 ui.update({key: {k: cell.value}})
+        #KDUser.objects.update_or_create(mobile_no=ui['mobile_no'], defaults={'open_id': ui['open_id']})
 
-        KDUser.objects.update_or_create(user_no=ui['user_no'], mobile_no=ui['mobile_no'], defaults={'type': 'kuandai20180717'})
+    with open(file_path, 'r') as cf:
+        reader = csv.reader(cf)
+        count = 0
+        update_count = 0
+        for row in reader:
+            try:
+                kdu = WechatUser.objects.update_or_create(open_id=row[0], mobile_no=row[1])
+
+            except WechatUser.DoesNotExist as dne:
+
+                pass
+            count = count + 1
+            if count % 5000 == 0:
+                print(count, " finished")
+
         '''
         try:
             sc2 = re.match(r'^(\w+?)\((\d+)\)', ui['seller_channel_second'])
@@ -327,7 +394,7 @@ def dealxlsx(request):
             o5, c5 = TeleDepartment.objects.update_or_create(name=sc5.group(1), department_id=sc5.group(2), level=5,
                                                              defaults={'superior': o4})
         '''
-    print("{} obejcts created".format(rc))
+    print("{} obejcts update".format(update_count))
     return JsonResponse(ul)
 
 

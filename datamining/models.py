@@ -81,6 +81,34 @@ class KDUser(models.Model):
     wechat_bind_time = models.DateTimeField(blank=True, null=True)
     open_id = models.CharField(max_length=32, blank=True, null=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['user_no', 'mobile_no']),
+            models.Index(fields=['mobile_no'], name='mobile_no_idx'),
+        ]
+
+    def __str__(self):
+        return "用户编号："+self.user_no+"|服务号码"+self.mobile_no
+
+
+class WechatUser(models.Model):
+    user_no = models.CharField(max_length=20)
+    mobile_no = models.CharField(max_length=12, blank=True, null=True)
+    type = models.CharField(max_length=32, blank=True, null=True)
+    wechat_id = models.CharField(max_length=32, blank=True, null=True)
+    wechat_bind_time = models.DateTimeField(blank=True, null=True)
+    open_id = models.CharField(max_length=32, blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user_no']),
+            models.Index(fields=['open_id'], name='open_id_idx'),
+        ]
+
+
+    def __str__(self):
+        return "用户编号："+self.user_no+"|服务号码"+self.mobile_no
+
 
 class Bill(models.Model):
     customer_id = models.CharField(max_length=20)
