@@ -273,11 +273,11 @@ def dealxlsx(request):
     #file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path  # 获取用户所选文件的地址
     #print('开始处理文件：', file_path)
 
-    file_path = UploadFile.objects.get(pk=13).filedata.path
-    file_path2 = UploadFile.objects.get(pk=14).filedata.path
-    file_path3 = UploadFile.objects.get(pk=15).filedata.path
+    file_path = UploadFile.objects.get(pk=5).filedata.path
+    file_path2 = UploadFile.objects.get(pk=6).filedata.path
+    file_path3 = UploadFile.objects.get(pk=7).filedata.path
 
-    '''
+    print('开始处理文件：', file_path)
     start = ttt.time()
     with open(file_path, 'r') as cf:
         reader = csv.reader(cf)
@@ -301,27 +301,26 @@ def dealxlsx(request):
         reader = csv.reader(cf)
         count = 0
         for row in reader:
-            if count < 980000:
-                pass
-
+            count = count + 1
+            if count % 10000 == 0:
+                print(count, " finished")
             try:
                 KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part2"})
             except:
                 print(row)
                 pass
             count = count + 1
-
-
     end = ttt.time()
     print(count, ' rows finished', end - start)
     print('开始处理文件：', file_path3)
     start = ttt.time()
-    '''
+
     print('开始处理文件：', file_path3)
     with open(file_path3, 'r') as cf:
         reader = csv.reader(cf)
         count = 0
         for row in reader:
+            count = count + 1
             if count % 10000 == 0:
                 print(count," finished")
             try:
@@ -329,7 +328,7 @@ def dealxlsx(request):
             except:
                 print(row)
                 pass
-            count = count + 1
+
 
 
     end = ttt.time()
