@@ -274,9 +274,9 @@ def dealxlsx(request):
     #file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path  # 获取用户所选文件的地址
     #print('开始处理文件：', file_path)
 
-    file_path = UploadFile.objects.get(pk=13).filedata.path
-    file_path2 = UploadFile.objects.get(pk=14).filedata.path
-    file_path3 = UploadFile.objects.get(pk=15).filedata.path
+    file_path = UploadFile.objects.get(pk=5).filedata.path
+    file_path2 = UploadFile.objects.get(pk=6).filedata.path
+    file_path3 = UploadFile.objects.get(pk=7).filedata.path
 
     print('开始处理文件：', file_path)
     start = time.time()

@@ -60,7 +60,7 @@ class Baseuser(models.Model):
 
 class TeleUser(Baseuser):
     customer_id = models.CharField(max_length=20)
-    user_no = models.CharField(max_length=20)
+    user_no = models.CharField(primary_key=True, max_length=20)
     mobile_no = models.CharField(max_length=12, blank=True, null=True)
     type = models.CharField(max_length=32, blank=True, null=True)
     wechat_id = models.CharField(max_length=32, blank=True, null=True)
@@ -69,6 +69,10 @@ class TeleUser(Baseuser):
 
     class Meta:
         ordering = ['-customer_id']
+        indexes = [
+            models.Index(fields=['user_no']),
+            models.Index(fields=['customer_id'], name='customer_id_idx'),
+        ]
         permissions = (
             ('access_teledata', 'Can access tele related data'),
         )
@@ -151,3 +155,7 @@ class SubscribePlan(models.Model):
     minimum_charge = models.IntegerField(blank=True, null=True)
     date_created = models.DateTimeField(default=timezone.now)
     date_update = models.DateTimeField('修改时间', auto_now=True)
+
+
+class Commission(models.Model):
+    pass
