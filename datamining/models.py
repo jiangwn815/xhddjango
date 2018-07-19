@@ -2,6 +2,7 @@ import uuid
 import django.utils.timezone as timezone
 from django.db import models
 
+
 # Create your models here.
 class Productinfo(models.Model):
     user_no = models.CharField(max_length=12, primary_key=True)
@@ -105,7 +106,6 @@ class WechatUser(models.Model):
             models.Index(fields=['open_id'], name='open_id_idx'),
         ]
 
-
     def __str__(self):
         return "用户编号："+self.user_no+"|服务号码"+self.mobile_no
 
@@ -142,3 +142,12 @@ class TeleDepartment(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SubscribePlan(models.Model):
+    name = models.CharField(max_length=64)
+    plan_id_local = models.CharField(max_length=32, blank=True, null=True)
+    plan_id_global = models.CharField(max_length=32, blank=True, null=True)
+    minimum_charge = models.IntegerField(blank=True, null=True)
+    date_created = models.DateTimeField(default=timezone.now)
+    date_update = models.DateTimeField('修改时间', auto_now=True)

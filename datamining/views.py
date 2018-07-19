@@ -12,7 +12,7 @@ from .models import Productinfo,TeleUser, Bill, ResourceUsage, KDUser, WechatUse
 from fileprocess.models import UploadFile
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
-import time as ttt
+import time
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
@@ -20,7 +20,7 @@ from django.conf import settings
 import itchat
 from .mapping import tele_field_mapping
 import re
-from .models import TeleDepartment
+from .models import TeleDepartment, SubscribePlan
 
 def index(request):
 
@@ -265,6 +265,7 @@ def field_location_mapping(first_row):
                             location[key].update({k: cell.col_idx})
                         else:
                             location.update({key: {k: cell.col_idx}})
+    print("文件头匹配结果：", location)
     return location
 
 
@@ -273,18 +274,18 @@ def dealxlsx(request):
     #file_path = UploadFile.objects.get(pk=request.GET.get('fileSelect')).filedata.path  # 获取用户所选文件的地址
     #print('开始处理文件：', file_path)
 
-    file_path = UploadFile.objects.get(pk=5).filedata.path
-    file_path2 = UploadFile.objects.get(pk=6).filedata.path
-    file_path3 = UploadFile.objects.get(pk=7).filedata.path
+    file_path = UploadFile.objects.get(pk=13).filedata.path
+    file_path2 = UploadFile.objects.get(pk=14).filedata.path
+    file_path3 = UploadFile.objects.get(pk=15).filedata.path
 
     print('开始处理文件：', file_path)
-    start = ttt.time()
+    start = time.time()
     with open(file_path, 'r') as cf:
         reader = csv.reader(cf)
         count = 0
         for row in reader:
             try:
-                KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part1"})
+                TeleUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part1"})
             except:
                 print(row)
                 pass
@@ -292,10 +293,10 @@ def dealxlsx(request):
             if count%10000==0:
                 print(count," finished")
 
-    end = ttt.time()
+    end = time.time()
     print(count,' rows finished',end-start)
     
-    start = ttt.time()
+    start = time.time()
     print('开始处理文件：', file_path2)
     with open(file_path2, 'r') as cf:
         reader = csv.reader(cf)
@@ -305,15 +306,15 @@ def dealxlsx(request):
             if count % 10000 == 0:
                 print(count, " finished")
             try:
-                KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part2"})
+                TeleUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part2"})
             except:
                 print(row)
                 pass
             count = count + 1
-    end = ttt.time()
+    end = time.time()
     print(count, ' rows finished', end - start)
     print('开始处理文件：', file_path3)
-    start = ttt.time()
+    start = time.time()
 
     print('开始处理文件：', file_path3)
     with open(file_path3, 'r') as cf:
@@ -324,18 +325,13 @@ def dealxlsx(request):
             if count % 10000 == 0:
                 print(count," finished")
             try:
-                KDUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part3"})
+                TeleUser.objects.update_or_create(user_no=row[0], mobile_no=row[1], defaults={'type':"part3"})
             except:
                 print(row)
                 pass
-
-
-
-    end = ttt.time()
+    end = time.time()
     print(count, ' rows finished', end - start)
-    
     return JsonResponse(ul)
-    
 
     ws = load_workbook(file_path).active  # 获取文件中的活动sheet
     mapping = field_location_mapping(ws[1])
@@ -403,9 +399,9 @@ def dealxlsx2(request):
 
     field_mapping = tele_field_mapping
     fpath = ""
-    start = ttt.time()
+    start = time.time()
     wb = load_workbook(fpath)
-    stop = ttt.time()
+    stop = time.time()
     print("文件载入时间：", stop-start)
     ul['file_load_time'] = stop-start
     for sheet_name in wb.sheetnames:
@@ -527,3 +523,50 @@ def collectxls(request):
     wb.save(path+'output.xls')
     ul["msg"] = "success!"
     return JsonResponse(ul)
+
+
+def update_data_index(request):
+    files = UploadFile.objects.filter(user=request.user)
+    for file in files.all():
+        print(file.id, ":", file.filedata.__str__())
+        #print(file.filedata.path)
+        #print(file.filedata.url)
+        #print(file.filedata.name)
+    return render(request, 'datacleaning/update_tele_data.html', {"files": files})
+
+
+def update_data(request):
+    ul = {}
+    file_obj = UploadFile.objects.get(pk=request.GET.get('fileSelect'))
+    file_path = file_obj.filedata.path # 获取用户所选文件的地址
+    print("读取文件：", file_obj.filename)
+    update_type = request.GET.get('typeSelect')
+    create_count = 0
+    if update_type == "subscribe":
+        ws = load_workbook(file_path).active  # 获取文件中的活动sheet
+        print(ws.max_row)
+        mapping = field_location_mapping(ws[1])
+
+        for row in ws.iter_rows(min_row=2):
+            ui = {}  # 存储单行字段-值信息
+            for cell in row:
+                for key, idx in mapping.items():
+                    if isinstance(idx, int):
+                        if cell.col_idx == idx:
+                            ui[key] = cell.value
+                    elif isinstance(idx, dict):
+                        for k, v in idx.items():
+                            if cell.col_idx == v:
+                                if key in ui:
+                                    ui[key].update({k: cell.value})
+                                else:
+                                    ui.update({key: {k: cell.value}})
+            sp = re.match(r'^([\w-]+?)\((\d+)\)$', ui["subscribe_plan"])  # 按照ABCD(XYZ)匹配，前一组设置贪婪匹配
+            if sp:
+                sp_obj, c = SubscribePlan.objects.update_or_create(name=sp.group(1), plan_id_local=sp.group(2))
+                if c:
+                    create_count = create_count + 1
+    ul['create_count'] = create_count
+    return JsonResponse(ul)
+
+
