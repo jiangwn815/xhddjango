@@ -8,7 +8,7 @@ import os, csv
 import copy
 import csv,chardet,codecs
 import xlrd
-from .models import Productinfo,TeleUser, Bill, ResourceUsage, KDUser, WechatUser
+from .models import Productinfo,TeleUser, Bill, ResourceUsage, KDUser, WechatUser, CommissionRecord
 from fileprocess.models import UploadFile
 from openpyxl import Workbook, load_workbook
 from datetime import datetime, date, timedelta
@@ -21,6 +21,7 @@ import itchat
 from .mapping import tele_field_mapping
 import re
 from .models import TeleDepartment, SubscribePlan
+import pandas as pd
 
 def index(request):
 
@@ -525,48 +526,64 @@ def collectxls(request):
     return JsonResponse(ul)
 
 
+@login_required()
 def update_data_index(request):
     files = UploadFile.objects.filter(user=request.user)
     for file in files.all():
         print(file.id, ":", file.filedata.__str__())
-        #print(file.filedata.path)
-        #print(file.filedata.url)
-        #print(file.filedata.name)
     return render(request, 'datacleaning/update_tele_data.html', {"files": files})
 
 
 def update_data(request):
     ul = {}
     file_obj = UploadFile.objects.get(pk=request.GET.get('fileSelect'))
-    file_path = file_obj.filedata.path # 获取用户所选文件的地址
-    print("读取文件：", file_obj.filename)
+    file_path = file_obj.filedata.path  # 获取用户所选文件的地址
     update_type = request.GET.get('typeSelect')
-    create_count = 0
-    if update_type == "subscribe":
-        ws = load_workbook(file_path).active  # 获取文件中的活动sheet
-        print(ws.max_row)
-        mapping = field_location_mapping(ws[1])
+    mapping = field_mapping(file_path)
+    print("读取文件：", file_obj.filename)
+    print("文件头匹配结果：", mapping)
+    count = 0
+    with open(file_path, 'r') as csvf:
+        for i, row in enumerate(csv.reader(csvf)):
+            map_value = {}
+            if i == 0:
+                continue
+            count += 1
+            for k, v in mapping.items():
+                if row[v] is None:
+                    continue
+                map_value[k] = row[v]
 
-        for row in ws.iter_rows(min_row=2):
-            ui = {}  # 存储单行字段-值信息
-            for cell in row:
-                for key, idx in mapping.items():
-                    if isinstance(idx, int):
-                        if cell.col_idx == idx:
-                            ui[key] = cell.value
-                    elif isinstance(idx, dict):
-                        for k, v in idx.items():
-                            if cell.col_idx == v:
-                                if key in ui:
-                                    ui[key].update({k: cell.value})
-                                else:
-                                    ui.update({key: {k: cell.value}})
-            sp = re.match(r'^([\w-]+?)\((\d+)\)$', ui["subscribe_plan"])  # 按照ABCD(XYZ)匹配，前一组设置贪婪匹配
-            if sp:
-                sp_obj, c = SubscribePlan.objects.update_or_create(name=sp.group(1), plan_id_local=sp.group(2))
-                if c:
-                    create_count = create_count + 1
-    ul['create_count'] = create_count
+            if map_value['comission_in_time'] == "":
+                map_value['comission_in_time'] = None
+            print(map_value)
+            CommissionRecord.objects.create(account_date="201801", **map_value)
     return JsonResponse(ul)
 
 
+# 返回表中第一行各字段的列值
+# 参数1：表格第一行的表头
+def field_mapping(fpath, mapping=tele_field_mapping):
+    location = {}
+    first_row = []
+    with open(fpath, 'r') as csvf:
+        for i, r in enumerate(csv.reader(csvf)):
+            if i == 0:
+                first_row = r
+                print(first_row)
+                break
+    for idx, value in enumerate(first_row):
+        if idx == 0 and value[0] == '\ufeff':
+            value = value[1:]
+        for key, field in mapping.items():
+            if isinstance(field, str):
+                if value == field:
+                    location[key] = idx
+            else:
+                for k, v in field.items():
+                    if value == v:
+                        if key in location:
+                            location[key].update({k: idx})
+                        else:
+                            location.update({key: {k: idx}})
+    return location

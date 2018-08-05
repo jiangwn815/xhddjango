@@ -157,5 +157,18 @@ class SubscribePlan(models.Model):
     date_update = models.DateTimeField('修改时间', auto_now=True)
 
 
-class Commission(models.Model):
-    pass
+class CommissionRecord(models.Model):
+    user = models.ForeignKey(TeleUser, on_delete=models.CASCADE, blank=True, null=True)
+    user_state = models.CharField(max_length=12, blank=True, null=True)
+    comission_in_time = models.DateTimeField(blank=True, null=True)
+    commission_strategy = models.CharField(max_length=64, blank=True, null=True)
+    comission_value = models.DecimalField(max_digits=16, decimal_places=2)
+    agency_name = models.CharField(max_length=64)
+    agency_id = models.CharField(max_length=12)
+    agency_code = models.CharField(max_length=12)
+    bundling_phone = models.CharField(max_length=64, blank=True, null=True)
+    comission_channel = models.CharField(max_length=24, blank=True, null=True)
+    agency_channel = models.CharField(max_length=24, blank=True, null=True)
+    account_date = models.CharField(max_length=6)
+
+

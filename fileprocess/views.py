@@ -32,7 +32,7 @@ def index(request):
         print("上传用户：", request.user)
         print("上传时间：", datetime.now())
         print("上传文件：", flinfo["name"])
-        print("文件大小(MB)：", flinfo["size"]/1024)
+        print("文件大小(KB)：", flinfo["size"]/1024)
         print("上传路径：", uf.filedata.path)
 
     return render(request, 'imgupload/index.html', flinfo)
