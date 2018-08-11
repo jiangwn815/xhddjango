@@ -18,9 +18,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from django.conf import settings
 import itchat
-from .mapping import tele_field_mapping
+from .mapping import tele_field_mapping, time_field
 import re
-from .models import TeleDepartment, SubscribePlan
+from .models import TeleDepartment, SubscribePlan, MobileOfAgent
 import pandas as pd
 
 def index(request):
@@ -553,11 +553,19 @@ def update_data(request):
                 if row[v] is None:
                     continue
                 map_value[k] = row[v]
+            if update_type == "subscrbie":
+                if map_value['comission_in_time'] == "":
+                    map_value['comission_in_time'] = None
+                CommissionRecord.objects.create(account_date="201801", **map_value)
+            elif update_type == "mobileofagent":
+                for k in time_field:
+                    if(map_value.get(k)):
+                        map_value[k]+="+08:00"  # 设定时区，但是存入到mysql后依然按照utc来存储，因此读取时需要转换
+                MobileOfAgent.objects.update_or_create(mobile=map_value["mobile"], defaults=map_value)
 
-            if map_value['comission_in_time'] == "":
-                map_value['comission_in_time'] = None
-            print(map_value)
-            CommissionRecord.objects.create(account_date="201801", **map_value)
+            if count %5000==0:
+                print("已处理", count)
+
     return JsonResponse(ul)
 
 

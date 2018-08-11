@@ -114,7 +114,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = True   #  设置为True以后所有model都按照utc处理，并存入mysql
 
 
 # Static files (CSS, JavaScript, Images)

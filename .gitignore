@@ -14,3 +14,17 @@ mainpages/migrations/0003_auto_20170401_0628.py
 
 /datamining/mapping.py
 /xhddjango/dbconfig.py
+QR.png
+datamining/__pycache__/
+datamining/migrations/
+datamining/static/datacleaning/css/bootstrap.css.map
+datamining/static/datacleaning/js/bootstrap.js.map
+fileprocess/__pycache__/
+fileprocess/migrations/
+mainpages/download/
+mainpages/static/mainpages/css/bootstrap.css.map
+mainpages/static/mainpages/font/
+mainpages/static/mainpages/js/bootstrap.js.map
+media/
+models2.py
+xhddjango/dbconfig2.py

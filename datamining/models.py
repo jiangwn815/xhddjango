@@ -172,3 +172,18 @@ class CommissionRecord(models.Model):
     account_date = models.CharField(max_length=6)
 
 
+class MobileOfAgent(models.Model):
+    mobile = models.CharField(max_length=11, primary_key=True)
+    channel_name =  models.CharField(max_length=32)
+    phone_num_status =  models.CharField(max_length=12)
+    add_time = models.DateTimeField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+    class Meta:
+        indexes = [
+            models.Index(fields=['mobile'])
+
+        ]
+        ordering = ['add_time']
