@@ -60,7 +60,7 @@ class Baseuser(models.Model):
 
 class TeleUser(Baseuser):
     customer_id = models.CharField(max_length=20)
-    user_no = models.CharField(primary_key=True, max_length=20)
+    user_no = models.CharField(max_length=20)
     mobile_no = models.CharField(max_length=12, blank=True, null=True)
     type = models.CharField(max_length=32, blank=True, null=True)
     wechat_id = models.CharField(max_length=32, blank=True, null=True)
@@ -181,6 +181,7 @@ class MobileOfAgent(models.Model):
     end_time = models.DateTimeField()
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
+
     class Meta:
         indexes = [
             models.Index(fields=['mobile'])
